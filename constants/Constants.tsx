@@ -6,6 +6,8 @@ export const AppText = {
    last_name_input: "Entrez votre nom",
    address_input: "Entrez votre adresse",
    phone_number_input: "Entrez votre numero de telephone",
+
+   create_account_text: "Vous n'avez pas de compte? Créer le maintenant",
    password_forgetten: "Mot de passe oublié?",
    connexion_button: "Connexion",
    responsable_button: "Responsable",

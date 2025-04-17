@@ -4,8 +4,7 @@ import Separator from "../Separator/Separator";
 import ButtonCustom from "../ButtonCustom/ButtonCustom";
 import { AppText } from "../../constants/Constants";
 
-export default function Login({ route, navigation} : {route : any, navigation : any}) {
-    console.log(route.params);
+export default function Login({ route, navigation}: {route: any, navigation: any}) {
     return (
         <View style={styles.container}>
             <Text style={styles.h1}>Login page</Text>
@@ -16,7 +15,7 @@ export default function Login({ route, navigation} : {route : any, navigation : 
                 <ButtonCustom title={AppText.connexion_button} style={[styles.button_principal, styles.aic]} onPress={() => {return null}} />
                 {route.params.role == "responsable" ? <Text style={styles.text_secondary}
                     onPress={() => navigation.navigate('Register', { role: 'responsable' })}>
-                    {AppText.password_forgetten}
+                    {AppText.create_account_text}
                 </Text>
                 : null}
             </View>
