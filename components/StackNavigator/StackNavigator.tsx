@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from '../Home/Home';
 import ProfilSelection from '../ProfilSelection/ProfilSelection';
 import Login from '../Login/Login';
+import Register from '../Register/Register';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,8 +20,12 @@ export default function StackNavigator() {
         options={{ title: "Profils" }} />
       <Stack.Screen
         name="Login"
-        component={Login}
+        component={(props: any) => <Login {...props}/>}
         options={{ title: "Login" }} />
+      <Stack.Screen
+        name="Register"
+        component={Register}
+        options={{ title: "Register" }} />
     </Stack.Navigator>
   );
 }

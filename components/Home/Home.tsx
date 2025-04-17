@@ -2,7 +2,6 @@
 import { Button, StyleSheet, Text, View } from 'react-native';
 //import { API_URL } from "@env"
 import { styles } from '../../constants/Styles';
-import { NavigationProps } from '../../constants/Constants';
 
 export default function Home({ navigation } : {navigation : any}) {
   return (
