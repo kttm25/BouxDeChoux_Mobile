@@ -57,6 +57,10 @@ export const styles = StyleSheet.create({
         margin: 5,
         fontSize: 14,
     },
+    text_error: {
+        color: "red",
+        fontSize: 14,
+    },
     separator: {
         marginVertical: 8,
         margin: 10,
