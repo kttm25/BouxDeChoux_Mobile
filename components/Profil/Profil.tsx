@@ -3,24 +3,45 @@ import { styles } from "../../constants/Styles";
 import Separator from "../Separator/Separator";
 import ButtonCustom from "../ButtonCustom/ButtonCustom";
 import { AppText } from "../../constants/Constants";
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { Controller, set, useForm } from "react-hook-form";
 import { registerSchema, RegisterSchemaType } from "../../models/register.model";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ApiService from "../../services/ApiService";
+import { updateUserSchema } from "../../models/updateuser.model";
+import User from "../../models/user.model";
 
 export default function Profil({ route, navigation }: { route: any, navigation: any }) {
 
     const [error, setError] = useState("");
-    const { control, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(registerSchema) });
+    const { control, handleSubmit, formState: { errors }, reset } = useForm({ resolver: yupResolver(updateUserSchema) });
+    const [user, setUser] = useState<User | undefined>(undefined);
 
-    const test = () => {
-        console.log("Test function called");
-    }
-    const onSubmit = async (data: any) => {
-        await ApiService.RegisterManger(data).then(res => {
+    useEffect(() => {
+        // Perform any necessary setup or API calls here
+        ApiService.GetUser().then(res => {
             if (res.success === true) {
-                console.log("Register successful:", res.data);
+                console.log("Get user successful:", res.data);
+                setUser(res.data);
+                reset({
+                    firstName: res.data.firstName,
+                    lastName: res.data.lastName,
+                    address: res.data.address,
+                });
+            }
+        }).catch(error => {
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'FirstPage' }],
+            })
+        });
+    }
+    , []);
+
+    const onSubmit = async (data: any) => {
+        await ApiService.UpdateUser(data).then(res => {
+            if (res.success === true) {
+                console.log("Update user successful:", res.data);
                 // Store the token in local storage or cookies if needed
                 navigation.navigate('Home');
             }
@@ -37,26 +58,9 @@ export default function Profil({ route, navigation }: { route: any, navigation: 
     };
     return (
         <View style={styles.container}>
-            <Text style={styles.h1}>{AppText.register_page_title}</Text>
+            <Text style={styles.h1}>{AppText.update_page_title}</Text>
             <Separator />
             <View style={styles.form_container}>
-                <Controller
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={styles.form_text_input}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            onFocus={() => setError("")}
-                            value={value}
-                            placeholder={AppText.email_input}
-                        />
-                    )}
-                    name="email"
-                    rules={{ required: true }}
-                />
-                {errors.email && <Text style={styles.text_error}>{errors.email.message}</Text>}
-                
                 <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
@@ -71,6 +75,7 @@ export default function Profil({ route, navigation }: { route: any, navigation: 
                     )}
                     name="firstName"
                     rules={{ required: true }}
+                    defaultValue={user?.firstName}
                 />
                 {errors.firstName && <Text style={styles.text_error}>{errors.firstName.message}</Text>}
                 
@@ -88,6 +93,7 @@ export default function Profil({ route, navigation }: { route: any, navigation: 
                     )}
                     name="lastName"
                     rules={{ required: true }}
+                    defaultValue={user?.lastName}
                 />
                 {errors.lastName && <Text style={styles.text_error}>{errors.lastName.message}</Text>}
                 
@@ -105,65 +111,13 @@ export default function Profil({ route, navigation }: { route: any, navigation: 
                     )}
                     name="address"
                     rules={{ required: true }}
+                    defaultValue={user?.address}
                 />
                 {errors.address && <Text style={styles.text_error}>{errors.address.message}</Text>}
                 
-                <Controller
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={styles.form_text_input}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            onFocus={() => setError("")}
-                            value={value}
-                            placeholder={AppText.phone_number_input}
-                        />
-                    )}
-                    name="phoneNumber"
-                    rules={{ required: true }}
-                />
-                {errors.phoneNumber && <Text style={styles.text_error}>{errors.phoneNumber.message}</Text>}
-                
-                <Controller
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={styles.form_text_input}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            onFocus={() => setError("")}
-                            secureTextEntry
-                            placeholder={AppText.password_input}
-                        />
-                    )}
-                    name="password"
-                    rules={{ required: true }}
-                />
-                {errors.password && <Text style={styles.text_error}>{errors.password.message}</Text>}
-                
-                <Controller
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            style={styles.form_text_input}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            onFocus={() => setError("")}
-                            secureTextEntry
-                            placeholder={AppText.password_input}
-                        />
-                    )}
-                    name="confirmPassword"
-                    rules={{ required: true }}
-                />
-                {errors.confirmPassword && <Text style={styles.text_error}>{String(errors.confirmPassword.message)}</Text>}
-
                 {error != "" && <Text style={styles.text_error}>{error}</Text>}
                 
-                <ButtonCustom title={AppText.register_button} style={[styles.button_principal, styles.aic]} onPress={handleSubmit(onSubmit)} />
+                <ButtonCustom title={AppText.update_button} style={[styles.button_principal, styles.aic]} onPress={handleSubmit(onSubmit)} />
             </View>
         </View>
     )

@@ -125,9 +125,9 @@ export default class ApiService {
             });
         return response;
     }
-
-    static async CreateParent(parent: User, childcareId: string) {
-        const response = await HttpService.postData("Manager/CreateParent", childcareId, parent)
+    
+    static async UpdateUser(user: User) {
+        const response = await HttpService.putData("User", "", user)
             .then((res) => {
                 if (res.success === true) {
                     return res;

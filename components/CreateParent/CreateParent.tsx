@@ -15,13 +15,9 @@ export default function CreateParent({ route, navigation }: { route: any, naviga
     const { control, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(registerSchema) });
 
     const onSubmit = async (data: any) => {
-        let parent = {
-            ...data,
-            role: "parent",
-        };
-        await ApiService.CreateParent(parent, route.params.childcareId).then(res => {
+        await ApiService.UpdateUser(data).then(res => {
             if (res.success === true) {
-                console.log("Register successful:", res.data);
+                console.log("Update successful:", res.data);
                 // Store the token in local storage or cookies if needed
                 navigation.navigate('Home', { role: route.params.role });
             }
@@ -31,7 +27,7 @@ export default function CreateParent({ route, navigation }: { route: any, naviga
                 console.log("Email already exists:", error.message);
                 setError(AppText.user_already_exists);
             }else {
-                console.log("Register error registerpage:", error.message);
+                console.log("Update error profilpage:", error.message);
                 setError(AppText.form_incorrect);
             }
         });

@@ -46,9 +46,8 @@ export default function StackNavigator() {
               />
               <Button
               color={"red"}
-                onPress={() => navigation.navigate("Login")}
-                //onPress={() => setLogout(true)}
-                title="Logout"
+                onPress={() => setLogout(true)}
+                title="Logout 1"
               />
             </View>
           )

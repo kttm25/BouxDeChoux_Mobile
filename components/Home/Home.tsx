@@ -28,6 +28,11 @@ export default function Home({ navigation, setLogout, logout }: { setLogout: Fun
 
   return (
     <View style={styles.container}>
+      
+      <Button
+                onPress={() => navigation.navigate("Profil")}
+                title="Profil"
+              />
       {role == "responsable" && <View style={styles.container}>
         <Text style={styles.h1}>{AppText.childcare_management_page_title}</Text>
         <Separator />

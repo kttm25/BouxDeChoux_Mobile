@@ -24,6 +24,7 @@ export const AppText = {
    manage_parent_button: "Gerer les parents",
    manage_educatrice_button: "Gerer les educatrices",
    create_button: "Creer",
+   update_button: "Mettre à jour",
 
    password_error: "Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial",
    password_required: "Le mot de passe est requis",
@@ -39,7 +40,7 @@ export const AppText = {
    phone_required: "Le numéro de téléphone est requis",
    phone_number_error: "Le numéro de téléphone doit contenir 10 chiffres",
    invalid_credentials: "L'Email ou le mot de passe est incorrect",
-   form_incorrect: "L'Email ou le mot de passe est incorrect",
+   form_incorrect: "Le formulaire est incorrect",
    user_already_exists: "L'utilisateur existe déjà",
    childcare_already_exists: "Cette crèche existe déjà",
    badRequest: "Mauvaise requête, veuillez contacter l'administrateur",
@@ -52,6 +53,7 @@ export const AppText = {
    create_parent_page_title: "Creer un parent",
    educatrice_management_page_title: "Gerer les educatrices",
    parent_management_page_title: "Gerer les parents",
+   update_page_title: "Mettre à jour votre profil",
 }
 
 export const AppRegex = {
