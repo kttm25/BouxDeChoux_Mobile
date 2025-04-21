@@ -9,13 +9,17 @@ import { registerSchema, RegisterSchemaType } from "../../models/register.model"
 import { yupResolver } from "@hookform/resolvers/yup";
 import ApiService from "../../services/ApiService";
 
-export default function Register({ route, navigation }: { route: any, navigation: any }) {
+export default function CreateEducator({ route, navigation }: { route: any, navigation: any }) {
 
     const [error, setError] = useState("");
     const { control, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(registerSchema) });
 
     const onSubmit = async (data: any) => {
-        await ApiService.RegisterManger(data).then(res => {
+        let educator = {
+            ...data,
+            role: "educatrice",
+        };
+        await ApiService.CreateEducator(educator, route.params.childcareId).then(res => {
             if (res.success === true) {
                 console.log("Register successful:", res.data);
                 // Store the token in local storage or cookies if needed
@@ -34,7 +38,7 @@ export default function Register({ route, navigation }: { route: any, navigation
     };
     return (
         <View style={styles.container}>
-            <Text style={styles.h1}>{AppText.register_page_title}</Text>
+            <Text style={styles.h1}>{AppText.create_educator_page_title}</Text>
             <Separator />
             <View style={styles.form_container}>
                 <Controller
@@ -167,12 +171,7 @@ export default function Register({ route, navigation }: { route: any, navigation
 
                 {error != "" && <Text style={styles.text_error}>{error}</Text>}
                 
-                <ButtonCustom title={AppText.register_button} style={[styles.button_principal, styles.aic]} onPress={handleSubmit(onSubmit)} />
-                {route.params.role == "responsable" ? <Text style={styles.text_secondary}
-                    onPress={() => navigation.navigate('Login', { role: 'responsable' })}>
-                    {AppText.login_redirection}
-                </Text>
-                    : null}
+                <ButtonCustom title={AppText.create_button} style={[styles.button_principal, styles.aic]} onPress={handleSubmit(onSubmit)} />
             </View>
         </View>
     )

@@ -7,15 +7,16 @@ import { useEffect, useState } from "react";
 import ApiService from "../../services/ApiService";
 import { set } from "react-hook-form";
 import ChildCare from "../../models/childcare";
+import User from "../../models/user.model";
 
-export function ManageChildCare({ navigation }: { navigation: any }) {
-    const [chidcares, setChildcares] = useState([]);
+export function ManageEducator({ navigation }: { navigation: any }) {
+    const [educator, setEducator] = useState([]);
 
     useEffect(() => {
         // Perform any necessary setup or API calls here
-        ApiService.GetChildCares().then(res => {
+        ApiService.GetChildCareUsers().then(res => {
             if (res.success === true) {
-                setChildcares(res.data);
+                setEducator(res.data.filter((user: User) => user.role === "educatrice"));
             }
         }).catch(error => {
             navigation.reset({
@@ -28,13 +29,13 @@ export function ManageChildCare({ navigation }: { navigation: any }) {
 
     return (
         <View style={styles.container}>
-            <Text>Gerer ses childcares</Text>
+            <Text>Gerer les educatrices</Text>
             <Separator />
             <View style={styles.manage_menu}>
                 <ButtonCustom
-                    title={AppText.create_childcare_button}
+                    title={AppText.create_educatrice_button}
                     style={styles.button_menu}
-                    onPress={() => navigation.navigate("CreateChildCare")}
+                    onPress={() => null/*navigation.navigate("CreateEducator")*/}
                 />
 
                 <ButtonCustom
@@ -46,30 +47,21 @@ export function ManageChildCare({ navigation }: { navigation: any }) {
             <View style={styles.table}>
 
                 <View style={styles.tableTitle}>
-                    <Text style={styles.h1}>{AppText.childcare_management_page_title}</Text>
+                    <Text style={styles.h1}>{AppText.educatrice_management_page_title}</Text>
                 </View>
                 <View style={styles.tableHeader}>
                     <Text style={styles.tableHeading}> Nom</Text>
                     <Text style={styles.tableHeading}> Email</Text>
-                    <Text style={styles.tableHeading}> Actions</Text>
+                    <Text style={styles.tableHeading}> Adresse</Text>
                 </View>
                 <FlatList
-                    data={chidcares}
-                    keyExtractor={(item: ChildCare) => item.id.toString()}
-                    renderItem={({ item } : {item : ChildCare}) => (
+                    data={educator}
+                    keyExtractor={(item: User) => item.id.toString()}
+                    renderItem={({ item } : {item : User}) => (
                         <View style={styles.tableRow}>
-                            <Text style={styles.tableRowText}>{item.name}</Text>
+                            <Text style={styles.tableRowText}>{item.firstName + " " + item.lastName}</Text>
                             <Text style={styles.tableRowText}>{item.email}</Text>
-                            <View style={{justifyContent: "space-between", paddingVertical: 5, gap: 5}}>
-                                <Button
-                                    title="Creer Educatrice"
-                                    onPress={() => navigation.navigate("CreateEducator", {childcareId: item.id})}
-                                />
-                                <Button
-                                    title="Creer Parent"
-                                    onPress={() => navigation.navigate("CreateParent", {childcareId: item.id})}
-                                />
-                            </View>
+                            <Text style={styles.tableRowText}>{item.address}</Text>
                         </View>
                     )}>
 

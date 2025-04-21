@@ -9,6 +9,10 @@ import { useState } from 'react';
 import Profil from '../Profil/Profil';
 import { ManageChildCare } from '../ManageChildcares/ManageChildcare';
 import CreateChildCare from '../CreateChildcare/CreateChildcare';
+import CreateEducator from '../CreateEducator/CreateEducator';
+import { ManageEducator } from '../ManageEducator/ManageEducator';
+import { ManageParent } from '../ManageParent/ManageParent';
+import CreateParent from '../CreateParent/CreateParent';
 
 const Stack = createNativeStackNavigator();
 
@@ -69,6 +73,35 @@ export default function StackNavigator() {
         component={CreateChildCare}
         options={{
           title: "Créer un childcare",
+        }}
+      />
+      <Stack.Screen
+        name="ManageEducator"
+        component={ManageEducator}
+        options={{
+          title: "Educatrices",
+        }}
+      />
+      <Stack.Screen
+        name="CreateEducator"
+        component={CreateEducator}
+        options={{
+          title: "Créer une educatrice",
+        }}
+      />
+      
+      <Stack.Screen
+        name="ManageParent"
+        component={ManageParent}
+        options={{
+          title: "Parents",
+        }}
+      />
+      <Stack.Screen
+        name="CreateParent"
+        component={CreateParent}
+        options={{
+          title: "Créer un parent",
         }}
       />
       <Stack.Screen

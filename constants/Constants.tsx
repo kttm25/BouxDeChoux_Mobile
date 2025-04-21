@@ -48,6 +48,10 @@ export const AppText = {
    register_page_title: "Page d'inscription",
    childcare_management_page_title: "Gerer votre crèche",
    create_childcare_title: "Creer une crèche",
+   create_educator_page_title: "Creer une educatrice",
+   create_parent_page_title: "Creer un parent",
+   educatrice_management_page_title: "Gerer les educatrices",
+   parent_management_page_title: "Gerer les parents",
 }
 
 export const AppRegex = {
