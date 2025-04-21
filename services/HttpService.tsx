@@ -1,6 +1,8 @@
+import axios from "axios";
+import { AppText } from "../constants/Constants";
 
 export default class HttpService {
-    static api_url: string = "https://10.17.142.196:7164/api";
+    static api_url: string = "http://192.168.40.22:7164/api";
     public static async getData(path: string, id:string ="", bodyParams: object) {
         const response = await fetch(`${this.api_url}/${path}/${id}`, {
             method: "GET",
@@ -8,6 +10,7 @@ export default class HttpService {
                 //Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
+            credentials: "include",
         });
         if (!response.ok) {
             throw new Error(response.statusText);
@@ -17,22 +20,35 @@ export default class HttpService {
     }
 
     static async postData(path: string, id:string ="", bodyParams: object) {
-        
-        console.log(`${this.api_url}/${path}/${id}`)
         const response = await fetch(`${this.api_url}/${path}/${id}`, {
             method: "POST",
             headers: {
+                //Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
+            credentials: "include",
             body: JSON.stringify(bodyParams),
         });
-        console.log("response")
         if (!response.ok) {
-            console.error("Error in POST request:", response.statusText);
-            throw new Error("Network response was not ok");
+            if(response.status === 401) {
+                console.log("Unauthorized access - 401:", response.status);
+                
+                const result = await response.json();
+                throw new Error("Unauthorized");
+            } 
+            else if(response.status === 409) {
+                console.log("Conflict - 409:", response.status);
+                const result = await response.json();
+                throw new Error("Conflict");
+            }
+            console.log("Bad request :", response);
+            const result = await response.json();
+            console.log("Error details:", result);
+            alert(AppText.badRequest);
+            return null;
         }
-        
         const result = await response.json();
+        console.log("Response :", result);
         return result;
     }
     

@@ -1,3 +1,4 @@
+import * as yup from "yup";
 import { object, string, ref } from "yup";
 import { AppRegex, AppText } from "../constants/Constants";
 
@@ -6,3 +7,5 @@ export const loginSchema = object({
     password: string().required().matches(AppRegex.password, AppText.password_error),
     //password: string().required().min(8).matches(/^(?=.*[0-9]).{8,}$/, "Password must be at least 8 characters long and contain at least one number"),
 });
+
+export type LoginSchemaType = yup.InferType<typeof loginSchema>;

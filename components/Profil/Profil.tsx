@@ -9,7 +9,7 @@ import { registerSchema, RegisterSchemaType } from "../../models/register.model"
 import { yupResolver } from "@hookform/resolvers/yup";
 import ApiService from "../../services/ApiService";
 
-export default function Register({ route, navigation }: { route: any, navigation: any }) {
+export default function Profil({ route, navigation }: { route: any, navigation: any }) {
 
     const [error, setError] = useState("");
     const { control, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(registerSchema) });
@@ -22,7 +22,7 @@ export default function Register({ route, navigation }: { route: any, navigation
             if (res.success === true) {
                 console.log("Register successful:", res.data);
                 // Store the token in local storage or cookies if needed
-                navigation.navigate('Home', { role: route.params.role });
+                navigation.navigate('Home');
             }
         }
         ).catch(error => {
@@ -54,7 +54,6 @@ export default function Register({ route, navigation }: { route: any, navigation
                     )}
                     name="email"
                     rules={{ required: true }}
-                    defaultValue="user12@example.com"
                 />
                 {errors.email && <Text style={styles.text_error}>{errors.email.message}</Text>}
                 
@@ -72,7 +71,6 @@ export default function Register({ route, navigation }: { route: any, navigation
                     )}
                     name="firstName"
                     rules={{ required: true }}
-                    defaultValue="string"
                 />
                 {errors.firstName && <Text style={styles.text_error}>{errors.firstName.message}</Text>}
                 
@@ -90,7 +88,6 @@ export default function Register({ route, navigation }: { route: any, navigation
                     )}
                     name="lastName"
                     rules={{ required: true }}
-                    defaultValue="string"
                 />
                 {errors.lastName && <Text style={styles.text_error}>{errors.lastName.message}</Text>}
                 
@@ -108,7 +105,6 @@ export default function Register({ route, navigation }: { route: any, navigation
                     )}
                     name="address"
                     rules={{ required: true }}
-                    defaultValue="string"
                 />
                 {errors.address && <Text style={styles.text_error}>{errors.address.message}</Text>}
                 
@@ -126,7 +122,6 @@ export default function Register({ route, navigation }: { route: any, navigation
                     )}
                     name="phoneNumber"
                     rules={{ required: true }}
-                    defaultValue="3432314563"
                 />
                 {errors.phoneNumber && <Text style={styles.text_error}>{errors.phoneNumber.message}</Text>}
                 
@@ -145,7 +140,6 @@ export default function Register({ route, navigation }: { route: any, navigation
                     )}
                     name="password"
                     rules={{ required: true }}
-                    defaultValue="Test@1234"
                 />
                 {errors.password && <Text style={styles.text_error}>{errors.password.message}</Text>}
                 
@@ -164,18 +158,12 @@ export default function Register({ route, navigation }: { route: any, navigation
                     )}
                     name="confirmPassword"
                     rules={{ required: true }}
-                    defaultValue="Test@1234"
                 />
                 {errors.confirmPassword && <Text style={styles.text_error}>{String(errors.confirmPassword.message)}</Text>}
 
                 {error != "" && <Text style={styles.text_error}>{error}</Text>}
                 
                 <ButtonCustom title={AppText.register_button} style={[styles.button_principal, styles.aic]} onPress={handleSubmit(onSubmit)} />
-                {route.params.role == "responsable" ? <Text style={styles.text_secondary}
-                    onPress={() => navigation.navigate('Login', { role: 'responsable' })}>
-                    {AppText.login_redirection}
-                </Text>
-                    : null}
             </View>
         </View>
     )

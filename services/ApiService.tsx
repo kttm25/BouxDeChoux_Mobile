@@ -1,21 +1,110 @@
 
+import { ChilcareSchemaSchemaType } from "../models/createChidcare.model";
+import CreateChildCareDto from "../models/createchildcare.dto";
+import { LoginSchemaType } from "../models/login.model";
+import { RegisterSchemaType } from "../models/register.model";
 import HttpService from "./HttpService";
 
 export default class ApiService {
-    static async Login(username: string, password: string) {
-        const response = await HttpService.postData("auth/login", "", { username, password })
+    static async Login(loginDto: LoginSchemaType) {
+        const response = await HttpService.postData("auth/login", "", loginDto)
             .then((res) => {
-                if (res.status === 200) {
-                    console.log("Login successful:", res.data);
-                    // Store the token in local storage or cookies if needed
-                    return res.data;
+                if (res.success === true) {
+                    return res;
                 } else {
-                    console.error("Login failed:", res.message);
+                    console.log("Login failed:", res.message);
                     throw new Error(res.message);
                 }
             })
             .catch((error) => {
-                console.error("Login error:", error.message);
+                console.log("Login error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+    
+    static async GetUser() {
+        const response = await HttpService.getData("user", "", {})
+            .then((res) => {
+                if (res.success === true) {
+                    return res;
+                } else {
+                    console.log("Get user failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Get user error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+    
+    
+    static async GetChildCares() {
+        const response = await HttpService.getData("ChildCare", "", {})
+            .then((res) => {
+                if (res.success === true) {
+                    return res;
+                } else {
+                    console.log("Get childcare failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Get childcare error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+    
+    static async Logout() {
+        const response = await HttpService.getData("Auth/Logout", "", {})
+            .then((res) => {
+                if (res.success === true) {
+                    return res;
+                } else {
+                    console.log("Logout failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Logout error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async RegisterManger(registerDto: RegisterSchemaType) {
+        const response = await HttpService.postData("Manager/CreateManager", "", registerDto)
+            .then((res) => {
+                if (res.success === true) {
+                    return res;
+                } else {
+                    console.log("Register failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Register error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async CreateChildCare(createChildcareDto: CreateChildCareDto) {
+        const response = await HttpService.postData("ChildCare", "", createChildcareDto)
+            .then((res) => {
+                console.log("Create childcare response:", res);
+                if (res.success === true) {
+                    return res;
+                } else {
+                    console.log("Create childcare failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Create childcare error:", error.message);
                 throw error;
             });
         return response;
