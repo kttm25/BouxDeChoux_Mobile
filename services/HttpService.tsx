@@ -2,7 +2,7 @@ import axios from "axios";
 import { AppText } from "../constants/Constants";
 
 export default class HttpService {
-    static api_url: string = "http://192.168.40.22:7164/api";
+    static api_url: string = "http://192.168.2.21:7164/api";
     public static async getData(path: string, id:string ="", bodyParams: object) {
         const response = await fetch(`${this.api_url}/${path}/${id}`, {
             method: "GET",

@@ -28,15 +28,10 @@ export default function Home({ navigation, setLogout, logout }: { setLogout: Fun
 
   return (
     <View style={styles.container}>
-      
-      <Button
-                onPress={() => navigation.navigate("Profil")}
-                title="Profil"
-              />
+      <Logout setModalVisible={setLogout} modalVisible={logout} navigation={navigation} />
       {role == "responsable" && <View style={styles.container}>
         <Text style={styles.h1}>{AppText.childcare_management_page_title}</Text>
         <Separator />
-        <Logout setModalVisible={setLogout} modalVisible={logout} navigation={navigation} />
         <ButtonCustom title={AppText.manage_childcare_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageChildcare'))} />
         <ButtonCustom title={AppText.manage_educatrice_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageEducator'))} />
         <ButtonCustom title={AppText.manage_parent_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageParent'))} />
