@@ -1,11 +1,7 @@
-import { useState } from "react";
-import { Pressable, Text, View, StyleSheet, Alert, SafeAreaView, Button } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Text, View, Modal, Pressable } from "react-native";
 import { styles } from "../../constants/Styles";
 import ApiService from "../../services/ApiService";
-import ReactNativeModal from "react-native-modal";
 import ButtonCustom from "../ButtonCustom/ButtonCustom";
-import { set } from "react-hook-form";
 
 export default function Logout({ navigation, modalVisible,setModalVisible }: { navigation: any, modalVisible: boolean, setModalVisible: Function }) {
     async function handleLogout() {
@@ -23,12 +19,17 @@ export default function Logout({ navigation, modalVisible,setModalVisible }: { n
     }
 
     return (
-        <ReactNativeModal isVisible={modalVisible} backdropOpacity={0.70} >
-          <View style={styles.modal_container}>
-            <Text>Voulez vous vraiment vous deconnecter?</Text>
-            <ButtonCustom style={styles.button_principal} title="Oui" onPress={handleLogout} />
-            <ButtonCustom style={styles.button_principal} title="Non" onPress={() => setModalVisible(!modalVisible)} />
-          </View>
-        </ReactNativeModal>
+        <Modal visible={modalVisible} transparent animationType="fade" onRequestClose={() => setModalVisible(false)}>
+            <Pressable
+                style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.7)", justifyContent: "center", alignItems: "center" }}
+                onPress={() => setModalVisible(false)}
+            >
+                <Pressable style={styles.modal_container} onPress={(event) => event.stopPropagation()}>
+                    <Text>Voulez vous vraiment vous deconnecter?</Text>
+                    <ButtonCustom style={styles.button_principal} title="Oui" onPress={handleLogout} />
+                    <ButtonCustom style={styles.button_principal} title="Non" onPress={() => setModalVisible(false)} />
+                </Pressable>
+            </Pressable>
+        </Modal>
     );
 }

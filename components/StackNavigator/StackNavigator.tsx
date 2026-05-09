@@ -1,4 +1,4 @@
-import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from '../Home/Home';
 import ProfilSelection from '../ProfilSelection/ProfilSelection';
 import Login from '../Login/Login';
@@ -13,6 +13,9 @@ import CreateEducator from '../CreateEducator/CreateEducator';
 import { ManageEducator } from '../ManageEducator/ManageEducator';
 import { ManageParent } from '../ManageParent/ManageParent';
 import CreateParent from '../CreateParent/CreateParent';
+import CreateChild from '../CreateChild/CreateChild';
+import UpdateParent from '../UpdateParent/UpdateParent';
+import { ManageChild } from '../ManageChild/ManageChild';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,7 +35,6 @@ export default function StackNavigator() {
       />
       <Stack.Screen
         name="Home"
-        component={({ navigation }: NativeStackScreenProps<any, 'Home'>) => <Home setLogout={setLogout} logout={logout} navigation={navigation} />}
         options={({ navigation }) => ({
           title: "Home",
           headerStyle: {
@@ -52,7 +54,11 @@ export default function StackNavigator() {
             </View>
           )
         })}
-      />
+      >
+        {({ navigation, route }) => (
+          <Home setLogout={setLogout} logout={logout} navigation={navigation} route={route} />
+        )}
+      </Stack.Screen>
       <Stack.Screen
         name="ProfilSelection"
         component={ProfilSelection}
@@ -104,8 +110,29 @@ export default function StackNavigator() {
         }}
       />
       <Stack.Screen
+        name="CreateChild"
+        component={CreateChild}
+        options={{
+          title: "Ajouter un enfant",
+        }}
+      />
+      <Stack.Screen
+        name="ManageChild"
+        component={ManageChild}
+        options={{
+          title: "Enfants",
+        }}
+      />
+      <Stack.Screen
+        name="UpdateParent"
+        component={UpdateParent}
+        options={{
+          title: "Modifier un parent",
+        }}
+      />
+      <Stack.Screen
         name="Login"
-        component={(props: any) => <Login {...props} />}
+        component={Login}
         options={{ title: "Login" }} />
       <Stack.Screen
         name="Register"

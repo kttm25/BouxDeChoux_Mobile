@@ -19,9 +19,11 @@ export const AppText = {
    educatrice_button: "Educatrice",
    create_childcare_button: "Creer une crèche",
    create_parent_button: "Creer un parent",
+   create_child_button: "Creer un enfant",
    create_educatrice_button: "Creer une educatrice",
    manage_childcare_button: "Gerer ses crèches",
    manage_parent_button: "Gerer les parents",
+    manage_child_button: "Gerer les enfants",
    manage_educatrice_button: "Gerer les educatrices",
    create_button: "Creer",
    update_button: "Mettre à jour",
@@ -51,8 +53,10 @@ export const AppText = {
    create_childcare_title: "Creer une crèche",
    create_educator_page_title: "Creer une educatrice",
    create_parent_page_title: "Creer un parent",
+   create_child_page_title: "Creer un enfant",
    educatrice_management_page_title: "Gerer les educatrices",
    parent_management_page_title: "Gerer les parents",
+   child_management_page_title: "Gerer les enfants",
    update_page_title: "Mettre à jour votre profil",
 }
 

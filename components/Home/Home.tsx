@@ -9,7 +9,7 @@ import Logout from '../Logout/Logout';
 import { useEffect, useState } from 'react';
 import ApiService from '../../services/ApiService';
 
-export default function Home({ navigation, setLogout, logout }: { setLogout: Function, logout: boolean, navigation: any }) {
+export default function Home({ navigation, route, setLogout, logout }: { setLogout: Function, logout: boolean, navigation: any, route?: any }) {
   const [role, setRole] = useState("");
   useEffect(() => {
     // Perform any necessary setup or API calls here
@@ -26,15 +26,19 @@ export default function Home({ navigation, setLogout, logout }: { setLogout: Fun
   }
     , []);
 
+  const normalizedRole = (role || route?.params?.role || "").toString().trim().toLowerCase();
+  const canManageChildcare = normalizedRole === "responsable" || normalizedRole === "manager";
+
   return (
     <View style={styles.container}>
       <Logout setModalVisible={setLogout} modalVisible={logout} navigation={navigation} />
-      {role == "responsable" && <View style={styles.container}>
+      {canManageChildcare && <View style={styles.container}>
         <Text style={styles.h1}>{AppText.childcare_management_page_title}</Text>
         <Separator />
         <ButtonCustom title={AppText.manage_childcare_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageChildcare'))} />
         <ButtonCustom title={AppText.manage_educatrice_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageEducator'))} />
         <ButtonCustom title={AppText.manage_parent_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageParent'))} />
+        <ButtonCustom title={AppText.manage_child_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageChild'))} />
       </View>}
     </View>
   );
