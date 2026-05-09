@@ -6,7 +6,7 @@ import ButtonCustom from "../ButtonCustom/ButtonCustom";
 import { AppText } from "../../constants/Constants";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { createChildSchema, CreateChildSchemaType } from "../../models/createchild.model";
+import { createChildSchema } from "../../models/createchild.model";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ApiService from "../../services/ApiService";
 import User from "../../models/user.model";
@@ -38,7 +38,7 @@ export default function CreateChild({ route, navigation }: { route: any, navigat
     const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
     const [birthDatePickerVisible, setBirthDatePickerVisible] = useState(false);
     const [selectedBirthDate, setSelectedBirthDate] = useState<Date>(new Date());
-    const { control, handleSubmit, formState: { errors }, setValue } = useForm<CreateChildSchemaType>({ resolver: yupResolver(createChildSchema) });
+    const { control, handleSubmit, formState: { errors }, setValue } = useForm({ resolver: yupResolver(createChildSchema) });
 
     const formatBirthDate = (date: Date): string => {
         const year = date.getFullYear();
@@ -157,7 +157,7 @@ export default function CreateChild({ route, navigation }: { route: any, navigat
         setSelectedBirthDate(date);
     };
 
-    const onSubmit = async (data: CreateChildSchemaType) => {
+    const onSubmit = async (data: any) => {
         if (!selectedChildcareId) {
             setError("Veuillez sélectionner un childcare");
             return;
@@ -185,7 +185,13 @@ export default function CreateChild({ route, navigation }: { route: any, navigat
         await ApiService.CreateChild(child, selectedChildcareId).then(res => {
             if (res.success === true) {
                 console.log("Create child successful:", res.data);
-                navigation.navigate('ManageParent', { refreshKey: Date.now() });
+                navigation.reset({
+                    index: 1,
+                    routes: [
+                        { name: "Home" },
+                        { name: "ManageChild", params: { refreshKey: Date.now(), childcareId: selectedChildcareId } },
+                    ],
+                });
             }
         }
         ).catch(error => {

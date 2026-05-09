@@ -10,4 +10,10 @@ export const createChildSchema = object({
     comment: string(),
 });
 
-export type CreateChildSchemaType = yup.InferType<typeof createChildSchema>;
+export type CreateChildSchemaType = {
+    firstName: string;
+    lastName: string;
+    birthDate: string;
+    medication?: string | undefined;
+    comment?: string | undefined;
+};

@@ -248,7 +248,6 @@ export default class ApiService {
     }
 
     static async CreateChild(child: CreateChildDTO, childcareId: string | number) {
-        console.log("Creating child with data:", child, "for childcare ID:", childcareId);
         const response = await HttpService.postData("Child/ByChildCare", String(childcareId), child)
             .then((res) => {
                 if (res.success === true) {
