@@ -56,7 +56,11 @@ export function ManageEducator({ navigation }: { navigation: any }) {
                 <ButtonCustom
                     title={AppText.create_educatrice_button}
                     style={styles.button_menu}
-                    onPress={() => null/*navigation.navigate("CreateEducator")*/}
+                    onPress={() => {
+                        if (selectedChildcareId !== null) {
+                            navigation.navigate("CreateEducator", { childcareId: selectedChildcareId });
+                        }
+                    }}
                 />
 
                 <ButtonCustom

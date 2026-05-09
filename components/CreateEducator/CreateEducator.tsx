@@ -44,8 +44,13 @@ export default function CreateEducator({ route, navigation }: { route: any, navi
         await ApiService.CreateEducator(educator, selectedChildcareId).then(res => {
             if (res.success === true) {
                 console.log("Register successful:", res.data);
-                // Store the token in local storage or cookies if needed
-                navigation.navigate('Home', { role: route.params.role });
+                navigation.reset({
+                    index: 1,
+                    routes: [
+                        { name: "Home" },
+                        { name: "ManageEducator", params: { refreshKey: Date.now(), childcareId: selectedChildcareId } },
+                    ],
+                });
             }
         }
         ).catch(error => {

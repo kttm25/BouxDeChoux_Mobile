@@ -58,8 +58,13 @@ export default function CreateChildCare({ route, navigation }: { route: any, nav
         await ApiService.CreateChildCare(childcareData).then(res => {
             if (res.success === true) {
                 console.log("Create childcare successful:", res.data);
-                // Store the token in local storage or cookies if needed
-                navigation.navigate('Home');
+                navigation.reset({
+                    index: 1,
+                    routes: [
+                        { name: "Home" },
+                        { name: "ManageChildcare" },
+                    ],
+                });
             }
         }
         ).catch(error => {
