@@ -1,25 +1,47 @@
-import { Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { styles } from "../../constants/Styles";
 import Separator from "../Separator/Separator";
 import ButtonCustom from "../ButtonCustom/ButtonCustom";
 import { AppText } from "../../constants/Constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { registerSchema, RegisterSchemaType } from "../../models/register.model";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ApiService from "../../services/ApiService";
+import ChildCare from "../../models/childcare";
 
 export default function CreateEducator({ route, navigation }: { route: any, navigation: any }) {
 
     const [error, setError] = useState("");
+    const [childcares, setChildcares] = useState<ChildCare[]>([]);
+    const [selectedChildcareId, setSelectedChildcareId] = useState<number | null>(null);
+    const [childcareDropdownOpen, setChildcareDropdownOpen] = useState(false);
     const { control, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(registerSchema) });
 
+    useEffect(() => {
+        ApiService.GetChildCares().then(res => {
+            if (res.success === true) {
+                setChildcares(res.data);
+                const routeId = Number(route?.params?.childcareId);
+                if (routeId) {
+                    setSelectedChildcareId(routeId);
+                } else if (res.data.length > 0) {
+                    setSelectedChildcareId(res.data[0].id);
+                }
+            }
+        }).catch(() => {});
+    }, []);
+
     const onSubmit = async (data: any) => {
+        if (!selectedChildcareId) {
+            setError("Veuillez sélectionner un childcare");
+            return;
+        }
         let educator = {
             ...data,
             role: "educatrice",
         };
-        await ApiService.CreateEducator(educator, route.params.childcareId).then(res => {
+        await ApiService.CreateEducator(educator, selectedChildcareId).then(res => {
             if (res.success === true) {
                 console.log("Register successful:", res.data);
                 // Store the token in local storage or cookies if needed
@@ -37,10 +59,44 @@ export default function CreateEducator({ route, navigation }: { route: any, navi
         });
     };
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={{ alignItems: "center", paddingBottom: 24 }} style={{ width: "100%" }}>
+        <View style={[styles.container, { justifyContent: "flex-start", width: "100%" }]}>
             <Text style={styles.h1}>{AppText.create_educator_page_title}</Text>
             <Separator />
             <View style={styles.form_container}>
+                <Text>Childcare</Text>
+                <Pressable
+                    onPress={() => setChildcareDropdownOpen(prev => !prev)}
+                    style={{
+                        width: "100%",
+                        borderWidth: 1,
+                        borderColor: "#c7c7c7",
+                        borderRadius: 4,
+                        paddingVertical: 12,
+                        paddingHorizontal: 10,
+                        backgroundColor: "white",
+                        marginBottom: 4,
+                    }}
+                >
+                    <Text>{childcares.find(c => c.id === selectedChildcareId)?.name ?? "-- Sélectionner un childcare --"}</Text>
+                </Pressable>
+                {childcareDropdownOpen && (
+                    <View style={{ width: "100%", borderWidth: 1, borderColor: "#c7c7c7", borderRadius: 4, maxHeight: 180, marginBottom: 8 }}>
+                        <ScrollView nestedScrollEnabled>
+                            {childcares.length === 0 && <Text style={{ padding: 10 }}>Aucun childcare disponible</Text>}
+                            {childcares.map(c => (
+                                <Pressable
+                                    key={c.id}
+                                    onPress={() => { setSelectedChildcareId(c.id); setChildcareDropdownOpen(false); }}
+                                    style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: "#efefef" }}
+                                >
+                                    <Text>{c.name}</Text>
+                                </Pressable>
+                            ))}
+                        </ScrollView>
+                    </View>
+                )}
+
                 <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
@@ -174,5 +230,6 @@ export default function CreateEducator({ route, navigation }: { route: any, navi
                 <ButtonCustom title={AppText.create_button} style={[styles.button_principal, styles.aic]} onPress={handleSubmit(onSubmit)} />
             </View>
         </View>
+        </ScrollView>
     )
 }
