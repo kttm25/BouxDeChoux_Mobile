@@ -4,9 +4,8 @@ import { NativeModules } from "react-native";
 
 export default class HttpService {
     private static envApiUrl: string | undefined =
-        (globalThis as any)?.process?.env?.API_URL ??
-        (globalThis as any)?.process?.env?.API_URL;
-    private static defaultApiUrl: string = "http://192.168.2.45:5018/api";
+        (globalThis as any)?.process?.env?.API_URL 
+    private static defaultApiUrl: string = "http://192.168.2.68:5018/api";
     static api_url: string = HttpService.normalizeApiUrl(
         HttpService.envApiUrl ?? HttpService.inferDevApiUrl() ?? HttpService.defaultApiUrl
     );
