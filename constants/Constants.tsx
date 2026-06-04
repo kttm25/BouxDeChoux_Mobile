@@ -25,6 +25,7 @@ export const AppText = {
    manage_parent_button: "Gerer les parents",
     manage_child_button: "Gerer les enfants",
    manage_educatrice_button: "Gerer les educatrices",
+   manage_room_button: "Gerer les salles",
    create_button: "Creer",
    update_button: "Mettre à jour",
 
@@ -57,6 +58,7 @@ export const AppText = {
    educatrice_management_page_title: "Gerer les educatrices",
    parent_management_page_title: "Gerer les parents",
    child_management_page_title: "Gerer les enfants",
+   room_management_page_title: "Gerer les salles",
    update_page_title: "Mettre à jour votre profil",
 }
 

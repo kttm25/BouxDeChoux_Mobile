@@ -26,20 +26,18 @@ export default function Home({ navigation, route, setLogout, logout }: { setLogo
   }
     , []);
 
-  const normalizedRole = (role || route?.params?.role || "").toString().trim().toLowerCase();
-  const canManageChildcare = normalizedRole === "responsable" || normalizedRole === "manager";
-
   return (
     <View style={styles.container}>
       <Logout setModalVisible={setLogout} modalVisible={logout} navigation={navigation} />
-      {canManageChildcare && <View style={styles.container}>
+      <View style={styles.container}>
         <Text style={styles.h1}>{AppText.childcare_management_page_title}</Text>
         <Separator />
         <ButtonCustom title={AppText.manage_childcare_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageChildcare'))} />
         <ButtonCustom title={AppText.manage_educatrice_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageEducator'))} />
         <ButtonCustom title={AppText.manage_parent_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageParent'))} />
         <ButtonCustom title={AppText.manage_child_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageChild'))} />
-      </View>}
+        <ButtonCustom title={AppText.manage_room_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageRoom'))} />
+      </View>
     </View>
   );
 }

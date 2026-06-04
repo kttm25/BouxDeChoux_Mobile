@@ -6,6 +6,9 @@ import { RegisterSchemaType } from "../models/register.model";
 import User from "../models/user.model";
 import HttpService from "./HttpService";
 import CreateChildDTO from "../models/createchild.dto";
+import CreateRoomDTO from "../models/createroom.dto";
+import AssignEducatorDTO from "../models/assigneducator.dto";
+import UpdateEducatorHoursDTO from "../models/updateeducatorhours.dto";
 
 export default class ApiService {
     static async Login(loginDto: LoginSchemaType) {
@@ -293,6 +296,159 @@ export default class ApiService {
             })
             .catch((error) => {
                 console.log("Delete child error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async GetRoomsByChildCare(childcareId: string | number) {
+        const response = await HttpService.getData("Room/ByChildCare", String(childcareId), {})
+            .then((res) => {
+                if (res.success === true) {
+                    return res;
+                } else {
+                    console.log("Get rooms failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Get rooms error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async GetRoomById(roomId: string | number) {
+        const response = await HttpService.getData("Room", String(roomId), {})
+            .then((res) => {
+                if (res.success === true) {
+                    return res;
+                } else {
+                    console.log("Get room details failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Get room details error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async CreateRoom(childcareId: string | number, room: CreateRoomDTO) {
+        const response = await HttpService.postData("Room/ByChildCare", String(childcareId), room)
+            .then((res) => {
+                if (res.success === true) {
+                    return res;
+                } else {
+                    console.log("Create room failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Create room error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async UpdateRoom(roomId: string | number, room: CreateRoomDTO) {
+        const response = await HttpService.putData("Room", String(roomId), room)
+            .then((res) => {
+                if (res.success === true) {
+                    return res;
+                } else {
+                    console.log("Update room failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Update room error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async DeleteRoom(roomId: string | number) {
+        const response = await HttpService.deleteData("Room", String(roomId), {})
+            .then((res) => {
+                if (!res || res.success === true) {
+                    return res ?? { success: true };
+                } else {
+                    console.log("Delete room failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Delete room error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async AssignEducatorToRoom(roomId: string | number, dto: AssignEducatorDTO) {
+        const response = await HttpService.postData(`Room/${String(roomId)}/AssignEducator`, "", dto)
+            .then((res) => {
+                if (res.success === true) {
+                    return res;
+                } else {
+                    console.log("Assign educator failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Assign educator error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async UnassignEducatorFromRoom(roomId: string | number, educatorId: string) {
+        const response = await HttpService.deleteData(`Room/${String(roomId)}/UnassignEducator`, String(educatorId), {})
+            .then((res) => {
+                if (!res || res.success === true) {
+                    return res ?? { success: true };
+                } else {
+                    console.log("Unassign educator failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Unassign educator error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async GetRoomEducators(roomId: string | number) {
+        const response = await HttpService.getData(`Room/${String(roomId)}/Educators`, "", {})
+            .then((res) => {
+                if (res.success === true) {
+                    return res;
+                } else {
+                    console.log("Get room educators failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Get room educators error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async UpdateRoomEducatorHours(roomId: string | number, dto: UpdateEducatorHoursDTO) {
+        const response = await HttpService.putData(`Room/${String(roomId)}/UpdateEducatorHours`, "", dto)
+            .then((res) => {
+                if (res.success === true) {
+                    return res;
+                } else {
+                    console.log("Update educator hours failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Update educator hours error:", error.message);
                 throw error;
             });
         return response;

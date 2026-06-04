@@ -16,6 +16,10 @@ import CreateParent from '../CreateParent/CreateParent';
 import CreateChild from '../CreateChild/CreateChild';
 import UpdateParent from '../UpdateParent/UpdateParent';
 import { ManageChild } from '../ManageChild/ManageChild';
+import { ManageRoom } from '../ManageRoom/ManageRooms';
+import CreateRoom from '../CreateRoom/CreateRoom';
+import UpdateRoom from '../UpdateRoom/UpdateRoom';
+import { AssignRoomEducator } from '../AssignRoomEducator/AssignRoomEducator';
 
 const Stack = createNativeStackNavigator();
 
@@ -121,6 +125,34 @@ export default function StackNavigator() {
         component={ManageChild}
         options={{
           title: "Enfants",
+        }}
+      />
+      <Stack.Screen
+        name="ManageRoom"
+        component={ManageRoom}
+        options={{
+          title: "Salles",
+        }}
+      />
+      <Stack.Screen
+        name="CreateRoom"
+        component={CreateRoom}
+        options={{
+          title: "Creer une salle",
+        }}
+      />
+      <Stack.Screen
+        name="UpdateRoom"
+        component={UpdateRoom}
+        options={{
+          title: "Mettre a jour une salle",
+        }}
+      />
+      <Stack.Screen
+        name="AssignRoomEducator"
+        component={AssignRoomEducator}
+        options={{
+          title: "Association educatrices",
         }}
       />
       <Stack.Screen
