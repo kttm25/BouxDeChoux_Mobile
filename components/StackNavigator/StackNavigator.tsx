@@ -20,6 +20,9 @@ import { ManageRoom } from '../ManageRoom/ManageRooms';
 import CreateRoom from '../CreateRoom/CreateRoom';
 import UpdateRoom from '../UpdateRoom/UpdateRoom';
 import { AssignRoomEducator } from '../AssignRoomEducator/AssignRoomEducator';
+import ManageDailyReports from '../ManageDailyReports/ManageDailyReports';
+import CreateDailyReport from '../CreateDailyReport/CreateDailyReport';
+import ViewDailyReport from '../ViewDailyReport/ViewDailyReport';
 
 const Stack = createNativeStackNavigator();
 
@@ -153,6 +156,27 @@ export default function StackNavigator() {
         component={AssignRoomEducator}
         options={{
           title: "Association educatrices",
+        }}
+      />
+      <Stack.Screen
+        name="ManageDailyReports"
+        component={ManageDailyReports}
+        options={{
+          title: "Notes journalières",
+        }}
+      />
+      <Stack.Screen
+        name="CreateDailyReport"
+        component={CreateDailyReport}
+        options={{
+          title: "Créer une note",
+        }}
+      />
+      <Stack.Screen
+        name="ViewDailyReport"
+        component={ViewDailyReport}
+        options={{
+          title: "Consulter un rapport",
         }}
       />
       <Stack.Screen

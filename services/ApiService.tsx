@@ -9,6 +9,8 @@ import CreateChildDTO from "../models/createchild.dto";
 import CreateRoomDTO from "../models/createroom.dto";
 import AssignEducatorDTO from "../models/assigneducator.dto";
 import UpdateEducatorHoursDTO from "../models/updateeducatorhours.dto";
+import CreateDailyReportDTO from "../models/createDailyReport.dto";
+import UpdateDailyReportDTO from "../models/updateDailyReport.dto";
 
 export default class ApiService {
     static async Login(loginDto: LoginSchemaType) {
@@ -449,6 +451,91 @@ export default class ApiService {
             })
             .catch((error) => {
                 console.log("Update educator hours error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async GetExternalActivities() {
+        const response = await HttpService.getData("Report/ExternalActivities", "", {})
+            .then((res) => {
+                if (res?.success === true) {
+                    return res;
+                } else {
+                    console.log("Get external activities failed:", res?.message);
+                    throw new Error(res?.message ?? "Get external activities failed");
+                }
+            })
+            .catch((error) => {
+                console.log("Get external activities error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async GetDailyReportsByChild(childId: string | number) {
+        const response = await HttpService.getData("Report/Child", String(childId), {})
+            .then((res) => {
+                if (res?.success === true) {
+                    return res;
+                } else {
+                    console.log("Get daily reports failed:", res?.message);
+                    throw new Error(res?.message ?? "Get daily reports failed");
+                }
+            })
+            .catch((error) => {
+                console.log("Get daily reports error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async CreateDailyReport(childId: string | number, dto: CreateDailyReportDTO) {
+        const response = await HttpService.postData("Report/Child", String(childId), dto)
+            .then((res) => {
+                if (res?.success === true) {
+                    return res;
+                } else {
+                    console.log("Create daily report failed:", res?.message);
+                    throw new Error(res?.message ?? "Create daily report failed");
+                }
+            })
+            .catch((error) => {
+                console.log("Create daily report error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async UpdateDailyReport(reportId: string | number, dto: UpdateDailyReportDTO) {
+        const response = await HttpService.putData("Report", String(reportId), dto)
+            .then((res) => {
+                if (res?.success === true) {
+                    return res;
+                } else {
+                    console.log("Update daily report failed:", res?.message);
+                    throw new Error(res?.message ?? "Update daily report failed");
+                }
+            })
+            .catch((error) => {
+                console.log("Update daily report error:", error.message);
+                throw error;
+            });
+        return response;
+    }
+
+    static async DeleteDailyReport(reportId: string | number) {
+        const response = await HttpService.deleteData("Report", String(reportId), {})
+            .then((res) => {
+                if (!res || res.success === true) {
+                    return res ?? { success: true };
+                } else {
+                    console.log("Delete daily report failed:", res.message);
+                    throw new Error(res.message);
+                }
+            })
+            .catch((error) => {
+                console.log("Delete daily report error:", error.message);
                 throw error;
             });
         return response;

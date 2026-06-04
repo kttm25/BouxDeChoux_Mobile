@@ -37,6 +37,7 @@ export default function Home({ navigation, route, setLogout, logout }: { setLogo
         <ButtonCustom title={AppText.manage_parent_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageParent'))} />
         <ButtonCustom title={AppText.manage_child_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageChild'))} />
         <ButtonCustom title={AppText.manage_room_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageRoom'))} />
+        <ButtonCustom title={AppText.manage_daily_report_button} style={[styles.button_principal, styles.aic]} onPress={() => (navigation.navigate('ManageDailyReports'))} />
       </View>
     </View>
   );

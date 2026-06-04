@@ -170,6 +170,10 @@ export function ManageChild({ navigation, route }: { navigation: any, route: any
                             <Text style={styles.tableRowText}>{item.lastName}</Text>
                             <Text style={styles.tableRowText}>{item.birthDate}</Text>
                             <View style={{ flex: 1 }}>
+                                    <Button
+                                        title="Notes"
+                                        onPress={() => navigation.navigate("ManageDailyReports", { childcareId: selectedChildcareId, childId: item.id })}
+                                    />
                                 <Button
                                     title="Supprimer"
                                     color="red"
