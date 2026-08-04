@@ -4,7 +4,7 @@ import { NativeModules } from "react-native";
 import AuthSession from "./AuthSession";
 
 export default class HttpService {
-    private static envApiUrl: string | undefined = process.env.EXPO_PUBLIC_API_URL;
+    private static envApiUrl: string | undefined = process.env.API_URL ?? process.env.EXPO_PUBLIC_API_URL;
     private static defaultApiUrl: string = "http://192.168.2.200:5018/api";
     static api_url: string = HttpService.normalizeApiUrl(
         HttpService.envApiUrl ?? HttpService.inferDevApiUrl() ?? HttpService.defaultApiUrl
@@ -38,7 +38,7 @@ export default class HttpService {
                 "Content-Type": "application/json",
                 ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}),
             },
-            credentials: "include",
+            credentials: "omit",
         });
         if (!response.ok) {
             console.log("Bad request :", response);
@@ -57,7 +57,7 @@ export default class HttpService {
                 "Content-Type": "application/json",
                 ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}),
             },
-            credentials: "include",
+            credentials: "omit",
             body: JSON.stringify(bodyParams),
         });
         if (!response.ok) {
@@ -92,7 +92,7 @@ export default class HttpService {
                 "Content-Type": "application/json",
                 ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}),
             },
-            credentials: "include",
+            credentials: "omit",
             body: JSON.stringify(bodyParams),
         });
         if (!response.ok) {
@@ -126,7 +126,7 @@ export default class HttpService {
                 "Content-Type": "application/json",
                 ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}),
             },
-            credentials: "include",
+            credentials: "omit",
             body: JSON.stringify(bodyParams),
         });
 

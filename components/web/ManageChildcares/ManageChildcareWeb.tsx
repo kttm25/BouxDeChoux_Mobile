@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import ApiService from '../../../services/ApiService';
 import ChildCare from '../../../models/childcare';
+import AdminTaskBar from '../AdminTaskBar/AdminTaskBar';
 
 const CHILDCARE_ICONS = ["🏡", "🌳", "🌻", "🎨", "🌈", "🦋"];
 const CARD_COLORS = ["#e0f5f0", "#fff0d8", "#fce7f3", "#e0f2fe", "#f0e8ff", "#fef9c3"];
@@ -16,8 +17,10 @@ export default function ManageChildCareWeb({ navigation }: { navigation: any }) 
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: 32 }} style={{ backgroundColor: "#f5f6fa", flex: 1 }}>
-      <View style={{ padding: 24, maxWidth: 1200, width: "100%", alignSelf: "center" }}>
+    <View style={{ flex: 1 }}>
+      <AdminTaskBar navigation={navigation} activeKey='utilisateurs' />
+      <ScrollView contentContainerStyle={{ paddingBottom: 32 }} style={{ backgroundColor: "#f5f6fa", flex: 1 }}>
+        <View style={{ padding: 24, maxWidth: 1200, width: "100%", alignSelf: "center" }}>
 
         {/* Header */}
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
@@ -75,14 +78,15 @@ export default function ManageChildCareWeb({ navigation }: { navigation: any }) 
         </View>
 
         {/* Stats */}
-        <View style={{ flexDirection: "row", gap: 16, flexWrap: "wrap" }}>
-          <View style={{ flex: 1, minWidth: 200, backgroundColor: "#2A9D8F", borderRadius: 16, padding: 24 }}>
-            <Text style={{ color: "rgba(255,255,255,0.7)", fontSize: 11, fontWeight: "700", letterSpacing: 1, marginBottom: 8 }}>TOTAL CRECHES</Text>
-            <Text style={{ color: "#fff", fontSize: 32, fontWeight: "800" }}>{childcares.length}</Text>
+          <View style={{ flexDirection: "row", gap: 16, flexWrap: "wrap" }}>
+            <View style={{ flex: 1, minWidth: 200, backgroundColor: "#2A9D8F", borderRadius: 16, padding: 24 }}>
+              <Text style={{ color: "rgba(255,255,255,0.7)", fontSize: 11, fontWeight: "700", letterSpacing: 1, marginBottom: 8 }}>TOTAL CRECHES</Text>
+              <Text style={{ color: "#fff", fontSize: 32, fontWeight: "800" }}>{childcares.length}</Text>
+            </View>
           </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 

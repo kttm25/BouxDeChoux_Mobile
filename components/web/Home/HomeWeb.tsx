@@ -1,5 +1,6 @@
 ﻿import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { styles } from '../../../constants/Styles';
+import AdminTaskBar from '../AdminTaskBar/AdminTaskBar';
 
 const adminCards = [
   { title: 'Gestion Childcares', text: 'Creer et gerer vos structures.', route: 'ManageChildcare', accent: '#2A9D8F' },
@@ -15,21 +16,24 @@ export default function HomeWeb({ navigation, route }: { navigation: any; route:
   const title = role === 'parent' ? 'Espace Parent' : role === 'educatrice' ? 'Espace Educatrice' : 'Portail Direction';
 
   return (
-    <ScrollView style={styles.dashboardScreen} contentContainerStyle={styles.dashboardContainer}>
-      <View style={styles.dashboardHeader}>
-        <Text style={styles.dashboardTitle}>{title}</Text>
-        <Text style={styles.dashboardSubtitle}>Interface web integree depuis la maquette Bout de Choux.</Text>
-      </View>
+    <View style={{ flex: 1 }}>
+      <AdminTaskBar navigation={navigation} activeKey='dashboard' />
+      <ScrollView style={styles.dashboardScreen} contentContainerStyle={styles.dashboardContainer}>
+        <View style={styles.dashboardHeader}>
+          <Text style={styles.dashboardTitle}>{title}</Text>
+          <Text style={styles.dashboardSubtitle}>Interface web integree depuis la maquette Bout de Choux.</Text>
+        </View>
 
-      <View style={styles.dashboardGrid}>
-        {adminCards.map((card) => (
-          <TouchableOpacity key={card.route} style={styles.dashboardCard} activeOpacity={0.9} onPress={() => navigation.navigate(card.route)}>
-            <View style={[styles.dashboardCardIcon, { backgroundColor: `${card.accent}1A` }]} />
-            <Text style={styles.dashboardCardTitle}>{card.title}</Text>
-            <Text style={styles.dashboardCardText}>{card.text}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </ScrollView>
+        <View style={styles.dashboardGrid}>
+          {adminCards.map((card) => (
+            <TouchableOpacity key={card.route} style={styles.dashboardCard} activeOpacity={0.9} onPress={() => navigation.navigate(card.route)}>
+              <View style={[styles.dashboardCardIcon, { backgroundColor: `${card.accent}1A` }]} />
+              <Text style={styles.dashboardCardTitle}>{card.title}</Text>
+              <Text style={styles.dashboardCardText}>{card.text}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 }

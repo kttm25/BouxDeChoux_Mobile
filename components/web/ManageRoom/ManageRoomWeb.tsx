@@ -4,6 +4,7 @@ import ApiService from "../../../services/ApiService";
 import ChildCare from "../../../models/childcare";
 import Room from "../../../models/room.model";
 import { AppText } from "../../../constants/Constants";
+import AdminTaskBar from "../AdminTaskBar/AdminTaskBar";
 
 const ROOM_ICONS = ["🦋", "🐞", "🐝", "🦗", "🐛", "🦎", "🐜", "🐌"];
 
@@ -108,8 +109,10 @@ export default function ManageRoom({ navigation, route }: { navigation: any; rou
     const avgOccupancy = totalCapacity > 0 ? Math.round((totalCurrent / totalCapacity) * 100) : 0;
 
     return (
-        <ScrollView contentContainerStyle={{ paddingBottom: 32 }} style={{ backgroundColor: "#f5f6fa", flex: 1 }}>
-            <View style={{ padding: 24, maxWidth: 1200, width: "100%", alignSelf: "center" }}>
+        <View style={{ flex: 1 }}>
+            <AdminTaskBar navigation={navigation} activeKey="locaux" />
+            <ScrollView contentContainerStyle={{ paddingBottom: 32 }} style={{ backgroundColor: "#f5f6fa", flex: 1 }}>
+                <View style={{ padding: 24, maxWidth: 1200, width: "100%", alignSelf: "center" }}>
                 {/* Header */}
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
                     <View>
@@ -216,9 +219,10 @@ export default function ManageRoom({ navigation, route }: { navigation: any; rou
                     </View>
                 </View>
 
-                {error !== "" && <Text style={{ color: "#dc2626", marginTop: 12 }}>{error}</Text>}
-            </View>
-        </ScrollView>
+                    {error !== "" && <Text style={{ color: "#dc2626", marginTop: 12 }}>{error}</Text>}
+                </View>
+            </ScrollView>
+        </View>
     );
 }
 

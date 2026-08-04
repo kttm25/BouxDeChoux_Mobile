@@ -1,6 +1,5 @@
 ﻿import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button, View } from 'react-native';
-import { useState } from 'react';
 import Home from '../Home/Home';
 import ProfilSelection from '../ProfilSelection/ProfilSelection';
 import Login from '../Login/Login';
@@ -23,51 +22,66 @@ import ManageDailyReports from '../ManageDailyReports/ManageDailyReports';
 import CreateDailyReport from '../CreateDailyReport/CreateDailyReport';
 import UpdateDailyReport from '../UpdateDailyReport/UpdateDailyReport';
 import ViewDailyReport from '../ViewDailyReport/ViewDailyReport';
+import ApiService from '../../../services/ApiService';
 
 const Stack = createNativeStackNavigator();
 
 export default function StackNavigator() {
-  const [logout, setLogout] = useState<boolean>(false);
+  async function handleLogout(navigation: any) {
+    try {
+      await ApiService.Logout();
+    } finally {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'FirstPage' }],
+      });
+    }
+  }
+
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerTintColor: '#1f2937',
+        headerTitleStyle: { fontWeight: '600' },
+      }}
+    >
       <Stack.Screen name='FirstPage' component={FirstPage} options={{ title: 'FirstPage', headerShown: false }} />
       <Stack.Screen
         name='Home'
         options={({ navigation }) => ({
           title: 'Home',
-          headerShown: false,
+          headerShown: true,
           headerStyle: { backgroundColor: 'white' },
           headerRight: () => (
             <View style={{ flexDirection: 'row', gap: 10 }}>
-              <Button color={'red'} onPress={() => setLogout(true)} title='Logout' />
+              <Button color={'red'} onPress={() => handleLogout(navigation)} title='Logout' />
             </View>
           ),
         })}
       >
-        {({ navigation, route }) => (
-          <Home setLogout={setLogout} logout={logout} navigation={navigation} route={route} />
-        )}
+        {({ navigation, route }) => <Home navigation={navigation} route={route} />}
       </Stack.Screen>
-      <Stack.Screen name='ProfilSelection' component={ProfilSelection} options={{ title: 'Profils', headerShown: false }} />
-      <Stack.Screen name='Login' component={Login} options={{ title: 'Login', headerShown: false }} />
-      <Stack.Screen name='Register' component={Register} options={{ title: 'Register', headerShown: false }} />
-      <Stack.Screen name='Profil' component={Profil} options={{ title: 'Profil', headerShown: false }} />
-      <Stack.Screen name='ManageChildcare' component={ManageChildcare} options={{ headerShown: false }} />
-      <Stack.Screen name='CreateChildCare' component={CreateChildcare} options={{ headerShown: false }} />
-      <Stack.Screen name='ManageEducator' component={ManageEducator} options={{ headerShown: false }} />
-      <Stack.Screen name='CreateEducator' component={CreateEducator} options={{ headerShown: false }} />
-      <Stack.Screen name='ManageParent' component={ManageParent} options={{ headerShown: false }} />
-      <Stack.Screen name='CreateParent' component={CreateParent} options={{ headerShown: false }} />
-      <Stack.Screen name='CreateChild' component={CreateChild} options={{ headerShown: false }} />
-      <Stack.Screen name='ManageChild' component={ManageChild} options={{ headerShown: false }} />
-      <Stack.Screen name='ManageRoom' component={ManageRoom} options={{ headerShown: false }} />
-      <Stack.Screen name='CreateRoom' component={CreateRoom} options={{ headerShown: false }} />
-      <Stack.Screen name='UpdateRoom' component={UpdateRoom} options={{ headerShown: false }} />
-      <Stack.Screen name='AssignRoomEducator' component={AssignRoomEducator} options={{ headerShown: false }} />
-      <Stack.Screen name='ManageDailyReports' component={ManageDailyReports} options={{ headerShown: false }} />
-      <Stack.Screen name='CreateDailyReport' component={CreateDailyReport} options={{ headerShown: false }} />
-      <Stack.Screen name='UpdateDailyReport' component={UpdateDailyReport} options={{ headerShown: false }} />
-      <Stack.Screen name='ViewDailyReport' component={ViewDailyReport} options={{ headerShown: false }} />
+      <Stack.Screen name='ProfilSelection' component={ProfilSelection} options={{ title: 'Profils', headerShown: true }} />
+      <Stack.Screen name='Login' component={Login} options={{ title: 'Login', headerShown: true }} />
+      <Stack.Screen name='Register' component={Register} options={{ title: 'Register', headerShown: true }} />
+      <Stack.Screen name='Profil' component={Profil} options={{ title: 'Profil', headerShown: true }} />
+      <Stack.Screen name='ManageChildcare' component={ManageChildcare} options={{ title: 'Gestion Creches', headerShown: true }} />
+      <Stack.Screen name='CreateChildCare' component={CreateChildcare} options={{ title: 'Creer Creche', headerShown: true }} />
+      <Stack.Screen name='ManageEducator' component={ManageEducator} options={{ title: 'Gestion Educateurs', headerShown: true }} />
+      <Stack.Screen name='CreateEducator' component={CreateEducator} options={{ title: 'Creer Educateur', headerShown: true }} />
+      <Stack.Screen name='ManageParent' component={ManageParent} options={{ title: 'Gestion Parents', headerShown: true }} />
+      <Stack.Screen name='CreateParent' component={CreateParent} options={{ title: 'Creer Parent', headerShown: true }} />
+      <Stack.Screen name='CreateChild' component={CreateChild} options={{ title: 'Creer Enfant', headerShown: true }} />
+      <Stack.Screen name='ManageChild' component={ManageChild} options={{ title: 'Gestion Enfants', headerShown: true }} />
+      <Stack.Screen name='ManageRoom' component={ManageRoom} options={{ title: 'Gestion Salles', headerShown: true }} />
+      <Stack.Screen name='CreateRoom' component={CreateRoom} options={{ title: 'Creer Salle', headerShown: true }} />
+      <Stack.Screen name='UpdateRoom' component={UpdateRoom} options={{ title: 'Modifier Salle', headerShown: true }} />
+      <Stack.Screen name='AssignRoomEducator' component={AssignRoomEducator} options={{ title: 'Assigner Educateur', headerShown: true }} />
+      <Stack.Screen name='ManageDailyReports' component={ManageDailyReports} options={{ title: 'Rapports Journaliers', headerShown: true }} />
+      <Stack.Screen name='CreateDailyReport' component={CreateDailyReport} options={{ title: 'Creer Rapport', headerShown: true }} />
+      <Stack.Screen name='UpdateDailyReport' component={UpdateDailyReport} options={{ title: 'Modifier Rapport', headerShown: true }} />
+      <Stack.Screen name='ViewDailyReport' component={ViewDailyReport} options={{ title: 'Voir Rapport', headerShown: true }} />
     </Stack.Navigator>
   );
 }
