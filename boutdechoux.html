@@ -1,0 +1,2960 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bout de Choux — Maquette Interactive</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:#1a1a1a;background:#f5f7f8}
+.screen{display:none !important;width:100%;min-height:100vh}
+.screen.visible{display:flex !important}
+
+/* ── LANDING ─────────────────────────────── */
+#landing{flex-direction:column;align-items:center;justify-content:center;gap:44px;background:linear-gradient(155deg,#e8faf5 0%,#fff 45%,#fff8f0 100%);min-height:100vh}
+.l-logo{font-size:2.6rem;font-weight:800;color:#2A9D8F;letter-spacing:-.02em;text-align:center}
+.l-tag{color:#999;font-size:.95rem;text-align:center;margin-top:6px}
+.l-cards{display:flex;gap:20px}
+.l-card{width:188px;background:#fff;border-radius:16px;padding:28px 18px;text-align:center;cursor:pointer;border:2px solid #eee;box-shadow:0 2px 12px rgba(0,0,0,.07);transition:all .2s}
+.l-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.13)}
+.l-card.cp:hover{border-color:#2A9D8F}
+.l-card.ce:hover{border-color:#7C3AED}
+.l-card.ca:hover{border-color:#C85A00}
+.l-emoji{font-size:2.6rem;margin-bottom:12px}
+.l-name{font-weight:700;font-size:1rem}
+.l-desc{font-size:.73rem;color:#aaa;margin-top:4px}
+.l-chip{display:inline-block;margin-top:12px;padding:4px 12px;border-radius:20px;font-size:.68rem;font-weight:700}
+.chip-t{background:#e0f5f0;color:#2A9D8F}
+.chip-p{background:#f0e8ff;color:#7C3AED}
+.chip-o{background:#FFF3D0;color:#C85A00}
+
+/* ── SHARED ATOMS ────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:8px;padding:9px 16px;font-size:.82rem;font-weight:600;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.88}
+.btn-teal{background:#2A9D8F;color:#fff}
+.btn-tdark{background:#1a6b60;color:#fff}
+.btn-orange{background:#C85A00;color:#fff}
+.btn-odark{background:#8B3A00;color:#fff}
+.btn-purple{background:#7C3AED;color:#fff}
+.btn-outline{background:#fff;border:1px solid #ddd;color:#444}
+.btn-green{background:#1a7a52;color:#fff}
+.btn-full{width:100%;justify-content:center}
+.btn-lg{padding:13px 20px;font-size:.9rem;border-radius:10px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.65rem;font-weight:700;letter-spacing:.04em}
+.b-full{background:#ffe0e0;color:#c00}
+.b-avail{background:#d0f5d0;color:#1a7a1a}
+.b-almost{background:#fff0d0;color:#7a4a00}
+.b-grey{background:#e5e5e5;color:#555}
+.b-validé{background:#d0f5d0;color:#1a7a1a}
+.b-complet{background:#e5e5e5;color:#555}
+.b-conforme{background:#d0f5d0;color:#1a7a1a;padding:2px 8px;border-radius:4px;font-size:.63rem;font-weight:700}
+.b-ajust{background:#ffe0d0;color:#a04000;padding:2px 8px;border-radius:4px;font-size:.63rem;font-weight:700}
+.card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.tabs-bar{display:flex;border-bottom:1px solid #e5e5e5;margin-bottom:22px}
+.tab{padding:10px 18px;font-size:.87rem;color:#aaa;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tab:hover{color:#555}
+.tab.t-teal{color:#2A9D8F;border-bottom-color:#2A9D8F;font-weight:600}
+.tab.t-orange{color:#C85A00;border-bottom-color:#C85A00;font-weight:600}
+.tab.t-purple{color:#7C3AED;border-bottom-color:#7C3AED;font-weight:600}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.back-lnk{font-size:.7rem;color:#bbb;cursor:pointer;padding:4px 8px;border-radius:5px;display:inline-flex;align-items:center;gap:4px}
+.back-lnk:hover{color:#888;background:rgba(0,0,0,.04)}
+.help-fab{position:fixed;bottom:20px;right:20px;width:48px;height:48px;border-radius:50%;background:#6B46C1;color:#fff;border:none;font-size:1.1rem;cursor:pointer;box-shadow:0 4px 12px rgba(107,70,193,.4);z-index:90;display:flex;align-items:center;justify-content:center}
+.share-fab{position:fixed;bottom:20px;right:20px;width:48px;height:48px;border-radius:50%;background:#6B46C1;color:#fff;border:none;font-size:1.1rem;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.2);z-index:90;display:flex;align-items:center;justify-content:center}
+.add-fab{position:fixed;bottom:20px;right:20px;width:48px;height:48px;border-radius:50%;background:#7C3AED;color:#fff;border:none;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 12px rgba(124,58,237,.4);z-index:90;display:flex;align-items:center;justify-content:center}
+
+/* ── PARENT SIDEBAR LAYOUT ───────────────── */
+.ps-layout{display:flex;width:100%;min-height:100vh}
+.ps-sidebar{width:268px;background:#fff;border-right:1px solid #e5e5e5;display:flex;flex-direction:column;flex-shrink:0;min-height:100vh}
+.ps-logo{font-size:.95rem;font-weight:700;color:#2A9D8F;padding:18px 18px 10px}
+.ps-child-card{margin:0 10px;background:#2A9D8F;border-radius:10px;padding:11px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.pcc-ava{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.pcc-name{color:#fff;font-weight:700;font-size:.87rem}
+.pcc-role{color:rgba(255,255,255,.72);font-size:.7rem}
+.pcc-chev{color:rgba(255,255,255,.7);margin-left:auto;font-size:.75rem}
+.ps-add-btn{margin:8px 10px;background:#2A9D8F;color:#fff;border:none;border-radius:10px;padding:10px;font-size:.83rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;width:calc(100% - 20px)}
+.ps-nav{flex:1;margin-top:6px}
+.ps-nav-item{display:flex;align-items:center;gap:11px;padding:10px 18px;font-size:.87rem;color:#555;cursor:pointer;border-right:3px solid transparent}
+.ps-nav-item:hover{background:#f5f5f5}
+.ps-nav-item.active{background:#e5f7f4;color:#2A9D8F;font-weight:600;border-right-color:#2A9D8F}
+.ps-settings{margin-top:auto;padding:14px 18px;border-top:1px solid #e5e5e5;display:flex;align-items:center;gap:10px;font-size:.85rem;color:#555;cursor:pointer}
+.ps-main{flex:1;background:#f5f7f8;overflow-y:auto;display:flex;flex-direction:column}
+.ps-topbar{display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:12px 26px}
+.ps-content{padding:0 26px 26px}
+
+/* ── ESPACE PARENT HOME ──────────────────── */
+.phs-sidebar{width:268px;background:#fff;border-right:1px solid #e5e5e5;display:flex;flex-direction:column;flex-shrink:0;min-height:100vh}
+.phs-header{padding:18px 18px 10px}
+.phs-title{font-weight:600;font-size:.87rem;color:#333}
+.phs-sub{font-size:.73rem;color:#999;margin-top:2px}
+.child-list{padding:0 10px;flex:1;display:flex;flex-direction:column;gap:8px}
+.child-item{display:flex;align-items:center;gap:11px;padding:11px;border-radius:10px;border:1px solid #e5e5e5;cursor:pointer;background:#fff;transition:background .15s}
+.child-item:hover{background:#f8f8f8}
+.child-item.sel{background:#2A9D8F;border-color:#2A9D8F}
+.ci-ava{width:40px;height:40px;border-radius:50%;background:#e5e5e5;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.child-item.sel .ci-ava{background:rgba(255,255,255,.22)}
+.ci-name{font-weight:600;font-size:.87rem;color:#333}
+.ci-dob{font-size:.7rem;color:#aaa}
+.child-item.sel .ci-name,.child-item.sel .ci-dob{color:#fff}
+.phs-bottom{margin-top:auto;padding:12px}
+.daily-content{flex:1;padding:0 26px 26px;overflow-y:auto}
+.sec-h{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.9rem;margin-bottom:14px}
+.mood-row{display:flex;gap:24px}
+.mood-circle{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem}
+.mc-t{background:#e0f5f2}
+.mc-o{background:#fff3e0}
+.mc-pk{background:#fde8f0}
+.mood-lbl{font-size:.7rem;color:#666;text-align:center;margin-top:5px}
+.ap-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f0f0}
+.ap-row:last-child{border-bottom:none}
+.ap-name{font-size:.87rem;color:#444}
+.forks{color:#2A9D8F;font-size:.8rem;letter-spacing:2px}
+.sieste-block{display:flex;flex-direction:column;align-items:center;justify-content:center;height:130px;gap:6px}
+.sieste-icon{font-size:1.8rem;background:#f0f0f0;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.sieste-time{font-size:1.5rem;font-weight:700}
+.sieste-lbl{font-size:.7rem;color:#999}
+.edu-msg{background:#e5f7f4;border-radius:10px;padding:14px;display:flex;gap:12px;align-items:flex-start;margin-top:14px}
+.em-ava{width:38px;height:38px;border-radius:50%;background:#aaa;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.em-title{color:#2A9D8F;font-weight:600;font-size:.85rem;margin-bottom:4px}
+.em-text{font-size:.8rem;color:#444;font-style:italic;line-height:1.5}
+
+/* ── ABSENCE FORM ────────────────────────── */
+.absence-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-month{font-size:.9rem;color:#555;font-weight:500}
+.cal-btn{background:none;border:none;cursor:pointer;color:#888;font-size:.9rem;padding:4px 8px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-hdr{text-align:center;font-size:.68rem;color:#bbb;padding:0 0 6px;font-weight:500}
+.cal-day{text-align:center;padding:0;font-size:.8rem;cursor:pointer;color:#333;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;transition:background .1s}
+.cal-day:hover{background:#e0f5f0}
+.cal-day.empty{color:#ccc;pointer-events:none}
+.cal-day.sel{background:#2A9D8F;color:#fff}
+.dates-summ{background:#f8f8f8;border-left:3px solid #2A9D8F;border-radius:4px;padding:9px 13px;margin-top:14px;font-size:.8rem;color:#666}
+.dates-val{color:#2A9D8F;font-weight:600}
+.form-lbl{font-size:.85rem;font-weight:600;color:#333;margin-bottom:5px;display:block}
+.form-sel{width:100%;border:1px solid #ddd;border-radius:8px;padding:9px 12px;font-size:.87rem;color:#333;appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E") no-repeat right 12px center;cursor:pointer;margin-bottom:14px;font-family:inherit}
+.form-ta{width:100%;border:1px solid #ddd;border-radius:8px;padding:11px;font-size:.8rem;color:#aaa;resize:none;height:100px;font-family:inherit;margin-bottom:14px}
+.alert-box{background:#FFF3E0;border-radius:8px;padding:11px 13px;font-size:.77rem;color:#7a4a00;display:flex;gap:8px;align-items:flex-start;margin-bottom:13px;line-height:1.5}
+.histo-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.histo-card{background:#fff;border-radius:10px;border:1px solid #e5e5e5;border-top:3px solid #2A9D8F;padding:13px}
+.hc-date{font-size:.7rem;color:#bbb;margin-bottom:4px}
+.hc-reason{font-weight:600;font-size:.87rem;margin-bottom:9px}
+.sec-sm-lbl{font-size:.62rem;font-weight:700;letter-spacing:.1em;color:#bbb;text-transform:uppercase;margin-bottom:11px}
+
+/* ── GALLERY ─────────────────────────────── */
+.gallery-layout{display:flex;width:100%;min-height:100vh}
+.gal-sidebar{width:196px;background:#fff;border-right:1px solid #e5e5e5;display:flex;flex-direction:column;padding:18px 0;min-height:100vh;flex-shrink:0}
+.gal-logo{font-size:.95rem;font-weight:700;color:#2A9D8F;padding:0 14px 2px}
+.gal-portal{font-size:.68rem;color:#bbb;padding:0 14px 14px}
+.gal-nav{flex:1}
+.gal-nav-item{display:flex;align-items:center;gap:9px;padding:9px 14px;font-size:.82rem;color:#555;cursor:pointer}
+.gal-nav-item:hover{background:#f5f5f5}
+.gal-nav-item.active{background:#e5f7f4;color:#2A9D8F;font-weight:600}
+.gal-user{border-top:1px solid #e5e5e5;padding:13px 14px;display:flex;align-items:center;gap:9px}
+.gal-ua{width:30px;height:30px;border-radius:50%;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.gal-uname{font-weight:600;font-size:.78rem}
+.gal-urole{font-size:.68rem;color:#aaa}
+.gal-main{flex:1;padding:26px 28px;overflow-y:auto}
+.gal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.gal-title{font-size:1.7rem;font-weight:700}
+.gal-sub{font-size:.8rem;color:#aaa;margin-top:4px}
+.period-tabs{display:flex;background:#fff;border-radius:8px;padding:3px;gap:2px;box-shadow:0 1px 4px rgba(0,0,0,.08);align-items:center}
+.pt-item{padding:6px 13px;border-radius:6px;font-size:.77rem;cursor:pointer;color:#666;font-weight:500}
+.pt-item.active{background:#2A9D8F;color:#fff}
+.pt-cal{padding:6px 10px;cursor:pointer;color:#666}
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:18px}
+.photo-cell{border-radius:10px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;transition:transform .15s;display:flex;align-items:center;justify-content:center;font-size:3rem}
+.photo-cell:hover{transform:scale(1.02);box-shadow:0 4px 14px rgba(0,0,0,.15)}
+
+/* ── ADMIN PORTAL ────────────────────────── */
+.admin-layout{flex-direction:column;width:100%;min-height:100vh;background:#f5f7f8}
+.admin-topnav{background:#fff;border-bottom:1px solid #e5e5e5;display:flex;align-items:center;padding:0 26px;height:56px;gap:22px;flex-shrink:0}
+.admin-logo{font-size:1.05rem;font-weight:800;color:#C85A00;letter-spacing:-.01em;margin-right:12px;flex-shrink:0;cursor:pointer}
+.admin-nav-item{font-size:.87rem;color:#555;cursor:pointer;padding:3px 0;border-bottom:2px solid transparent;white-space:nowrap;transition:color .1s}
+.admin-nav-item:hover{color:#C85A00}
+.admin-nav-item.active{color:#C85A00;border-bottom-color:#C85A00;font-weight:600}
+.admin-nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.admin-search{display:flex;align-items:center;gap:7px;background:#f5f5f5;border-radius:7px;padding:6px 11px;font-size:.8rem;color:#bbb;min-width:150px}
+.admin-ava{width:32px;height:32px;border-radius:50%;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.admin-subtabs{background:#fff;padding:0 26px;border-bottom:1px solid #e5e5e5;display:flex;flex-shrink:0}
+.ast{padding:10px 18px;font-size:.82rem;color:#aaa;cursor:pointer;border-bottom:2px solid transparent;transition:all .1s;white-space:nowrap}
+.ast:hover{color:#C85A00}
+.ast.active{color:#C85A00;border-bottom-color:#C85A00;font-weight:600}
+.admin-content{padding:26px;flex:1;overflow-y:auto}
+.page-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px}
+.page-title{font-size:1.7rem;font-weight:700}
+.page-sub{font-size:.8rem;color:#aaa;margin-top:4px}
+
+/* ── ROOM CARDS ──────────────────────────── */
+.rc{background:#fff;border-radius:12px;padding:17px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.rc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.rc-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.ri-t{background:#e0f5f0}
+.ri-o{background:#fff3e0}
+.ri-p{background:#f0e8ff}
+.ri-pk{background:#ffe8f0}
+.rc-name{font-weight:700;font-size:.95rem;margin-bottom:2px}
+.rc-group{font-size:.7rem;color:#aaa;margin-bottom:9px}
+.cap-bar{height:5px;border-radius:3px;background:#eee;margin:5px 0}
+.cap-fill{height:100%;border-radius:3px}
+.cf-red{background:#e44;width:100%}
+.cf-orange{background:#f0a000;width:83%}
+.cf-teal{background:#2A9D8F;width:60%}
+.cf-almost{background:#e44;width:90%}
+.cap-txt{font-size:.77rem;margin-bottom:9px}
+.cn-red{color:#c00;font-weight:700}
+.cn-teal{color:#2A9D8F;font-weight:700}
+.rc-edu{background:#f8f8f8;border-radius:7px;padding:7px 9px;display:flex;align-items:center;gap:8px;margin-bottom:11px}
+.re-ava{width:24px;height:24px;border-radius:50%;background:#ccc;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0}
+.re-lbl{font-size:.62rem;color:#aaa}
+.re-name{font-size:.77rem;font-weight:600}
+.rc-actions{display:flex;gap:12px}
+.ra-mod{font-size:.77rem;font-weight:700;color:#2A9D8F;cursor:pointer}
+.ra-del{font-size:.77rem;font-weight:700;color:#c00;cursor:pointer}
+.stat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.sc{border-radius:12px;padding:18px 22px;color:#fff;position:relative;overflow:hidden}
+.sc-t{background:#1a7a6d}
+.sc-p{background:#7C3AED}
+.sc-b{background:#8B5000}
+.sc-lbl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.75;margin-bottom:7px}
+.sc-val{font-size:1.9rem;font-weight:700}
+.sc-ico{position:absolute;right:18px;bottom:14px;font-size:2.5rem;opacity:.18}
+
+/* ── HORAIRES & RATIOS ───────────────────── */
+.ratio-card{background:#fff;border-radius:12px;padding:17px}
+.ratio-card.alert-rc{border-left:3px solid #e44}
+.rh-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:11px}
+.rh-name{font-weight:700;font-size:.93rem}
+.rh-age{font-size:.7rem;color:#aaa;margin-top:2px}
+.ratio-nums{background:#f8f8f8;border-radius:8px;padding:9px 11px;display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.rn-b{display:flex;flex-direction:column;align-items:center}
+.rn-num{font-size:1.25rem;font-weight:700}
+.rn-lbl{font-size:.53rem;text-transform:uppercase;color:#aaa}
+.rn-div{width:1px;height:26px;background:#ddd}
+.ratio-bdg{margin-left:auto;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.67rem;font-weight:700}
+.rb-ok{background:#d0f5d0;color:#1a7a1a;border:2px solid #2A9D8F}
+.rb-w{background:#ffe0d0;color:#c04000;border:2px solid #c04000}
+.staff-row{display:flex;align-items:center;gap:9px;padding:6px 0}
+.sr-ava{width:30px;height:30px;border-radius:50%;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.sr-name{font-size:.83rem;font-weight:600}
+.sr-h{font-size:.7rem;color:#aaa}
+.sr-warn{margin-left:auto;font-size:.85rem}
+.dashed-btn{width:100%;background:none;border:2px dashed #ddd;border-radius:8px;padding:9px;font-size:.77rem;color:#bbb;cursor:pointer;margin-top:7px;display:flex;align-items:center;justify-content:center;gap:6px}
+.dashed-btn:hover{border-color:#C85A00;color:#C85A00}
+.ratios-bot{display:grid;grid-template-columns:1fr 220px;gap:14px;align-items:start;margin-top:18px}
+.info-box{background:#FFF8F0;border-radius:10px;padding:15px}
+.ib-title{font-weight:700;font-size:.87rem;margin-bottom:7px;display:flex;gap:10px;align-items:center}
+.ib-body{font-size:.78rem;color:#555;line-height:1.6}
+.ib-note{font-size:.67rem;color:#bbb;font-style:italic;margin-top:6px}
+.mini-stats{background:#fff;border-radius:12px;padding:15px}
+.msr{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f5f5f5}
+.msr:last-child{border-bottom:none}
+.msr-lbl{font-size:.82rem;color:#555}
+.msr-val{font-size:1.25rem;font-weight:700;color:#C85A00}
+.msr-val-lg{font-size:1.55rem}
+
+/* ── INSCRIPTIONS TABLE ──────────────────── */
+.ins-table{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:18px}
+.it-hdr,.it-row{display:grid;grid-template-columns:88px 1fr 120px 125px 105px 1fr;padding:11px 18px;align-items:center;gap:7px}
+.it-hdr{background:#f8f8f8;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#aaa}
+.it-row{border-top:1px solid #f0f0f0}
+.it-row:hover{background:#fafafa}
+.prio-bdg{display:inline-block;padding:3px 9px;border-radius:20px;font-size:.67rem;font-weight:700}
+.p1{background:#ffe5d0;color:#b54000}
+.p2{background:#fff3d0;color:#8a5a00}
+.p3{background:#f0f0f0;color:#666}
+.p-name{font-weight:600;font-size:.87rem}
+.p-email{font-size:.68rem;color:#bbb}
+.c-name{font-weight:600;font-size:.82rem}
+.c-age{font-size:.68rem;color:#bbb}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#f0a000;display:inline-block;margin-right:3px}
+.status-txt{font-size:.77rem;color:#888}
+.row-acts{display:flex;gap:7px}
+.btn-accept{background:#1a7a52;color:#fff;border:none;border-radius:7px;padding:7px 11px;font-size:.77rem;font-weight:600;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.btn-wait{background:#fff;border:1px solid #ddd;color:#555;border-radius:7px;padding:7px 11px;font-size:.77rem;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px}
+
+/* ── RAPPORTS SIDEBAR ────────────────────── */
+.rep-layout{display:flex;width:100%;min-height:100vh}
+.rep-sidebar{width:215px;background:#fff;border-right:1px solid #e5e5e5;display:flex;flex-direction:column;min-height:100vh;flex-shrink:0}
+.rep-office{margin:11px;background:#FFF3D0;border-radius:9px;padding:11px}
+.rep-oname{font-weight:700;font-size:.87rem;color:#C85A00}
+.rep-obranch{font-size:.7rem;color:#aaa}
+.rep-nav{flex:1;padding-top:7px}
+.rep-nav-item{display:flex;align-items:center;gap:9px;padding:9px 14px;font-size:.82rem;color:#555;cursor:pointer}
+.rep-nav-item:hover{background:#f5f5f5}
+.rep-nav-item.active{background:#FFF3E0;color:#C85A00;font-weight:600}
+.rep-bot{border-top:1px solid #e5e5e5;padding:10px 0}
+.rep-bot-item{display:flex;align-items:center;gap:9px;padding:8px 14px;font-size:.82rem;color:#555;cursor:pointer}
+.rep-bot-item:hover{background:#f5f5f5}
+.rep-main{flex:1;padding:26px 28px;background:#f5f7f8;overflow-y:auto}
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+.kpi-card{background:#fff;border-radius:12px;padding:18px}
+.kpi-title{font-size:.82rem;color:#555;margin-bottom:9px}
+.kpi-num{font-size:1.8rem;font-weight:700}
+.kpi-unit{font-size:.85rem;font-weight:400;color:#aaa;margin-left:3px}
+.kpi-trend{font-size:.7rem;color:#1a7a1a;margin-top:3px}
+.kpi-note{font-size:.7rem;color:#aaa;display:flex;align-items:center;gap:4px;margin-top:3px}
+.donut{width:76px;height:76px;border-radius:50%;background:conic-gradient(#C85A00 0% 94%,#eee 94% 100%);display:flex;align-items:center;justify-content:center;margin:0 auto 7px}
+.donut-in{width:56px;height:56px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.87rem}
+.donut-note{font-size:.7rem;color:#888;text-align:center}
+.exp-section{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:22px}
+.exp-sec-hdr{padding:13px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f0f0f0}
+.exp-sec-title{font-weight:700;font-size:.9rem}
+.exp-item{display:flex;align-items:center;gap:13px;padding:13px 18px;border-bottom:1px solid #f0f0f0;transition:background .1s}
+.exp-item:last-child{border-bottom:none}
+.exp-item:hover{background:#fafafa}
+.exp-ico{font-size:1.1rem;color:#C85A00;flex-shrink:0}
+.exp-info{flex:1}
+.exp-name{font-weight:600;font-size:.87rem}
+.exp-desc{font-size:.7rem;color:#aaa;margin-top:1px}
+.exp-acts{display:flex;gap:7px}
+.btn-pdf{background:#8B3A00;color:#fff;border:none;border-radius:7px;padding:7px 13px;font-size:.77rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px}
+.btn-xlsx{background:#fff;border:1px solid #ddd;color:#555;border-radius:7px;padding:7px 13px;font-size:.77rem;cursor:pointer;display:flex;align-items:center;gap:5px}
+.bot-duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.quality-banner{border-radius:12px;height:175px;background:linear-gradient(135deg,#C85A00 0%,#7A2800 100%);display:flex;align-items:flex-end;padding:17px}
+.qb-title{color:#fff;font-weight:700;font-size:.9rem;margin-bottom:4px}
+.qb-desc{color:rgba(255,255,255,.78);font-size:.7rem;line-height:1.5}
+.archives-box{background:#FFF3D0;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;text-align:center;height:175px}
+.arch-ico{font-size:2rem;margin-bottom:9px}
+.arch-title{font-weight:700;font-size:.9rem;margin-bottom:5px}
+.arch-desc{font-size:.7rem;color:#aaa;line-height:1.5}
+
+/* ── EDUCATOR SCREENS ────────────────────── */
+.edu-layout{flex-direction:column;width:100%;min-height:100vh;background:#f5f7f8}
+.edu-topnav{background:#fff;border-bottom:1px solid #e5e5e5;height:50px;display:flex;align-items:center;padding:0 22px;gap:3px;flex-shrink:0}
+.edu-logo{font-size:.95rem;font-weight:700;color:#2A9D8F;margin-right:17px;cursor:pointer}
+.edu-tnav{font-size:.82rem;color:#888;cursor:pointer;padding:4px 9px;border-bottom:2px solid transparent}
+.edu-tnav:hover{color:#555}
+.edu-tnav.active{color:#2A9D8F;border-bottom-color:#2A9D8F;font-weight:600}
+.edu-tnav.act-p{color:#7C3AED;border-bottom-color:#7C3AED;font-weight:600}
+.edu-tnav-right{margin-left:auto;display:flex;gap:10px;align-items:center}
+.edu-subtabs{background:#fff;border-bottom:1px solid #e5e5e5;display:flex;padding:0 22px;flex-shrink:0}
+.est{padding:9px 14px;font-size:.82rem;color:#aaa;cursor:pointer;border-bottom:2px solid transparent}
+.est:hover{color:#555}
+.est.act-t{color:#2A9D8F;border-bottom-color:#2A9D8F;font-weight:600}
+.est.act-p{color:#7C3AED;border-bottom-color:#7C3AED;font-weight:600}
+.edu-body{display:flex;flex:1;overflow:hidden}
+.edu-lsidebar{width:165px;background:#fff;border-right:1px solid #e5e5e5;display:flex;flex-direction:column;padding:14px 0;flex-shrink:0}
+.els-class{padding:0 13px 10px;border-bottom:1px solid #f0f0f0;margin-bottom:6px}
+.els-cname{font-weight:700;font-size:.87rem}
+.els-crole{font-size:.65rem;color:#aaa}
+.els-item{display:flex;align-items:center;gap:8px;padding:8px 13px;font-size:.82rem;color:#555;cursor:pointer}
+.els-item:hover{background:#f5f5f5}
+.els-item.active{background:#f0e8ff;color:#7C3AED;font-weight:600}
+.els-new{margin:10px;background:#2A9D8F;color:#fff;border:none;border-radius:7px;padding:9px;font-size:.8rem;font-weight:600;cursor:pointer;text-align:center}
+.edu-saisie-body{flex:1;padding:18px 22px;overflow-y:auto}
+.saisie-phdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.saisie-title{font-size:1.05rem;font-weight:700}
+.saisie-date{font-size:.78rem;color:#aaa;margin-top:2px}
+.saisie-child-row{display:flex;align-items:center;gap:9px;margin-top:4px}
+.scr-ava{width:24px;height:24px;border-radius:50%;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:.75rem}
+.scr-name{color:#7C3AED;font-weight:600;font-size:.9rem}
+.badge-ec{background:#d0f5d0;color:#1a7a1a;padding:2px 9px;border-radius:20px;font-size:.63rem;font-weight:700}
+.saisie-g2{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:13px}
+.saisie-card{background:#fff;border-radius:10px;padding:14px}
+.saisie-card-h{font-size:.87rem;font-weight:600;margin-bottom:11px;display:flex;align-items:center;gap:6px}
+.h-emojis{display:flex;gap:9px;flex-wrap:wrap}
+.h-emoji{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.h-ico{width:42px;height:42px;border-radius:50%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:1.3rem;border:2px solid transparent;transition:all .1s}
+.h-ico:hover{border-color:#7C3AED;background:#f0e8ff}
+.h-lbl{font-size:.6rem;color:#aaa}
+.p-icons{display:flex;gap:7px;margin-bottom:7px}
+.p-ico{width:42px;height:42px;border-radius:9px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:1.15rem;cursor:pointer;border:2px solid transparent}
+.p-ico.sel{background:#FFF3D0;border-color:#f0a000}
+.p-ico:hover{border-color:#7C3AED}
+.p-note{font-size:.67rem;color:#aaa;font-style:italic}
+.consignes{display:flex;gap:7px}
+.c-opt{flex:1;padding:11px 5px;border-radius:7px;border:2px solid #eee;text-align:center;cursor:pointer;font-size:.6rem;font-weight:700;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:5px}
+.c-opt.sel-g{border-color:#2A9D8F;background:#e0f5f0;color:#1a7a52}
+.c-opt:hover{border-color:#7C3AED}
+.sieste-r{display:flex;gap:6px;margin-bottom:8px;align-items:center}
+.sieste-o{width:34px;height:34px;border-radius:7px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:.95rem;cursor:pointer;border:2px solid transparent}
+.sieste-o:hover{border-color:#7C3AED}
+.sieste-inp{flex:1;border:1px solid #ddd;border-radius:7px;padding:6px 10px;font-size:.77rem;color:#aaa;font-family:inherit}
+.act-icons{display:flex;gap:6px;flex-wrap:wrap}
+.act-ico{width:34px;height:34px;border-radius:7px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:.95rem;cursor:pointer;border:2px solid transparent}
+.act-ico:hover{border-color:#7C3AED}
+.apt-card{background:#fff;border-radius:10px;padding:0 14px;margin-bottom:13px}
+.apt-hdr{display:grid;grid-template-columns:1fr auto;padding:6px 0;font-size:.6rem;font-weight:700;text-transform:uppercase;color:#aaa;border-bottom:1px solid #f0f0f0}
+.apt-row{display:grid;grid-template-columns:1fr auto;padding:10px 0;border-bottom:1px solid #f5f5f5;align-items:center}
+.apt-row:last-child{border-bottom:none}
+.apt-meal{font-weight:600;font-size:.87rem;color:#7C3AED}
+.apt-icos{display:flex;gap:5px}
+.apt-ico{width:32px;height:32px;border-radius:50%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:.85rem;cursor:pointer;border:2px solid transparent}
+.apt-ico.sel-p{background:#f0e8ff;border-color:#7C3AED}
+.apt-ico.sel-g{background:#e0f5f0;border-color:#2A9D8F}
+.apt-ico:hover{border-color:#7C3AED}
+.comment-card{background:#fff;border-radius:10px;padding:14px;margin-bottom:13px}
+.cm-lbl{font-size:.87rem;font-weight:600;margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.cm-area{width:100%;border:1px solid #ddd;border-radius:7px;padding:11px;font-size:.8rem;color:#aaa;height:78px;resize:none;font-family:inherit}
+.saisie-footer{display:flex;justify-content:flex-end;gap:9px;padding:13px 22px;background:#fff;border-top:1px solid #e5e5e5;flex-shrink:0}
+.btn-cancel{background:#f5f5f5;border:none;border-radius:9px;padding:11px 20px;font-size:.87rem;font-weight:600;cursor:pointer;color:#555}
+.btn-save{background:#7C3AED;border:none;border-radius:9px;padding:11px 20px;font-size:.87rem;font-weight:600;cursor:pointer;color:#fff;display:flex;align-items:center;gap:7px}
+
+/* ── PROGRAMME ───────────────────────────── */
+.prog-body{flex:1;padding:18px 22px;overflow-y:auto}
+.prog-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.prog-title{font-size:1.25rem;font-weight:700}
+.prog-sub{font-size:.77rem;color:#aaa;margin-top:3px}
+.week-cols{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:18px}
+.day-col{display:flex;flex-direction:column;gap:8px}
+.day-hdr{text-align:center;border-radius:9px;padding:9px 6px;font-weight:700;font-size:.87rem}
+.dh-today{background:#7C3AED;color:#fff}
+.dh-other{background:#fff;color:#333}
+.dh-date{font-size:.67rem;opacity:.7;margin-top:2px}
+.act-slot{background:#fff;border-radius:7px;padding:9px 11px;cursor:pointer;position:relative}
+.act-slot:hover{box-shadow:0 2px 8px rgba(0,0,0,.09)}
+.at-time{display:inline-block;background:#f0a000;color:#fff;font-size:.58rem;font-weight:700;padding:2px 5px;border-radius:3px;margin-bottom:4px}
+.at-edit{position:absolute;top:7px;right:8px;color:#ddd;font-size:.7rem;cursor:pointer}
+.at-name{color:#7C3AED;font-size:.77rem;font-weight:600;margin-bottom:2px}
+.at-desc{font-size:.68rem;color:#aaa}
+.add-slot{border:2px dashed #e0e0e0;border-radius:7px;padding:12px;text-align:center;color:#ccc;cursor:pointer;font-size:1.1rem;background:none;width:100%}
+.add-slot:hover{border-color:#7C3AED;color:#7C3AED}
+.prog-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.ps{background:#fff;border-radius:9px;padding:13px 15px;display:flex;gap:11px;align-items:center}
+.ps-ico{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.psi-p{background:#f0e8ff}
+.psi-t{background:#e0f5f0}
+.psi-o{background:#FFF3E0}
+.ps-lbl{font-size:.58rem;font-weight:700;text-transform:uppercase;color:#bbb;letter-spacing:.06em}
+.ps-val{font-size:.93rem;font-weight:700}
+
+/* ── CARNET DÉVELOPPEMENT ────────────────── */
+.carnet-layout{display:flex;width:100%;min-height:100vh}
+.carnet-sidebar{width:192px;background:#7C3AED;color:#fff;display:flex;flex-direction:column;padding:18px 0;min-height:100vh;flex-shrink:0}
+.cs-portal{padding:0 14px 2px;font-size:.77rem;font-weight:700;opacity:.68}
+.cs-sub{padding:0 14px 15px;font-size:.65rem;opacity:.48}
+.cs-item{display:flex;align-items:center;gap:9px;padding:9px 14px;font-size:.82rem;cursor:pointer;opacity:.68;border-left:3px solid transparent;transition:all .1s}
+.cs-item:hover{opacity:1;background:rgba(255,255,255,.1)}
+.cs-item.active{opacity:1;background:rgba(255,255,255,.15);border-left-color:#fff;font-weight:600}
+.cs-new{margin:11px;background:rgba(255,255,255,.2);border:none;border-radius:7px;padding:9px;color:#fff;font-size:.8rem;font-weight:600;cursor:pointer;text-align:center}
+.cs-bot{margin-top:auto;border-top:1px solid rgba(255,255,255,.18);padding-top:11px}
+.cs-bot-item{display:flex;align-items:center;gap:9px;padding:8px 14px;font-size:.82rem;cursor:pointer;opacity:.68}
+.cs-bot-item:hover{opacity:1}
+.carnet-main{flex:1;padding:22px 26px;background:#f5f7f8;overflow-y:auto}
+.carnet-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.carnet-child-row{display:flex;gap:14px;align-items:center}
+.carnet-ava{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#555,#222);position:relative;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.age-bdg{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);background:#7C3AED;color:#fff;font-size:.53rem;font-weight:700;padding:2px 5px;border-radius:3px;white-space:nowrap}
+.carnet-cname{font-size:1.35rem;font-weight:700;color:#7C3AED}
+.carnet-csub{font-size:.77rem;color:#aaa;margin-top:3px}
+.carnet-acts{display:flex;gap:7px}
+.dev-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.dev-card{background:#fff;border-radius:12px;padding:17px}
+.dev-card-h{display:flex;align-items:center;gap:9px;font-weight:700;font-size:.88rem;margin-bottom:13px}
+.dev-ico{width:28px;height:28px;border-radius:7px;background:#f0e8ff;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.dev-skill{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f5f5f5}
+.dev-skill:last-of-type{border-bottom:none}
+.dev-sname{font-size:.82rem;color:#444}
+.dev-bdg{padding:3px 9px;border-radius:12px;font-size:.63rem;font-weight:700}
+.db-av{background:#7C3AED;color:#fff}
+.db-ac{background:#2A9D8F;color:#fff}
+.db-ap{background:#f0a000;color:#fff}
+.dev-clbl{font-size:.68rem;color:#bbb;margin:9px 0 4px}
+.dev-cbox{background:#f8f8f8;border-radius:7px;padding:9px 11px;font-size:.77rem;color:#666;font-style:italic;min-height:46px}
+.obs-section{background:#fff;border-radius:12px;padding:17px}
+.obs-title{font-weight:700;font-size:.88rem;margin-bottom:13px}
+.obs-row{display:flex;align-items:flex-start;gap:13px;padding:11px 0;border-top:1px solid #f0f0f0}
+.obs-date{min-width:30px;text-align:center}
+.obs-dnum{font-size:1.05rem;font-weight:700}
+.obs-dmo{font-size:.58rem;text-transform:uppercase;color:#bbb}
+.obs-info{flex:1}
+.obs-name{font-weight:600;font-size:.85rem;margin-bottom:2px}
+.obs-desc{font-size:.77rem;color:#aaa}
+.obs-menu{color:#ddd;cursor:pointer;margin-left:auto;font-size:.9rem}
+
+/* ── UTILITY ─────────────────────────────── */
+.mt8{margin-top:8px}
+.mt12{margin-top:12px}
+.mt16{margin-top:16px}
+.mb16{margin-bottom:16px}
+.fl-row{display:flex;align-items:center;gap:10px}
+.fl-between{justify-content:space-between}
+.topbar-icon{font-size:1.15rem;cursor:pointer;color:#666}
+.divider{height:1px;background:#f0f0f0;margin:14px 0}
+
+/* ── LOGIN SCREENS ───────────────────────── */
+.login-wrap{display:flex;width:100%;min-height:100vh}
+.login-left{width:42%;position:relative;overflow:hidden;padding:52px 48px;display:flex;flex-direction:column;justify-content:space-between;flex-shrink:0}
+.ll-deco{position:absolute;top:-80px;right:-80px;width:340px;height:340px;border-radius:50%;background:rgba(255,255,255,.07)}
+.ll-deco2{position:absolute;bottom:-100px;left:-60px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.05)}
+.ll-logo{font-size:1.05rem;font-weight:800;color:rgba(255,255,255,.95);letter-spacing:-.01em;margin-bottom:3px}
+.ll-portal{font-size:.73rem;color:rgba(255,255,255,.55);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.ll-center{position:relative;z-index:2}
+.ll-letter{width:72px;height:72px;border-radius:18px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:900;color:rgba(255,255,255,.9);margin-bottom:24px;letter-spacing:-.02em}
+.ll-title{font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:10px;line-height:1.2}
+.ll-desc{font-size:.82rem;color:rgba(255,255,255,.65);line-height:1.65;max-width:260px}
+.ll-footer{position:relative;z-index:2}
+.ll-footer-text{font-size:.72rem;color:rgba(255,255,255,.4);line-height:1.6}
+.ll-divider{width:32px;height:2px;background:rgba(255,255,255,.25);margin-bottom:12px;border-radius:1px}
+
+.login-right{flex:1;background:#fff;display:flex;align-items:center;justify-content:center;padding:52px 64px}
+.login-form{width:100%;max-width:340px}
+.lf-back{display:inline-flex;align-items:center;gap:6px;font-size:.77rem;color:#bbb;cursor:pointer;margin-bottom:36px;padding:0;background:none;border:none;transition:color .1s}
+.lf-back:hover{color:#555}
+.lf-title{font-size:1.45rem;font-weight:800;color:#1a1a1a;letter-spacing:-.02em;margin-bottom:6px}
+.lf-sub{font-size:.83rem;color:#aaa;margin-bottom:32px;line-height:1.5}
+.lf-label{display:block;font-size:.78rem;font-weight:700;color:#333;margin-bottom:6px;letter-spacing:.01em}
+.lf-input{width:100%;border:1.5px solid #e5e5e5;border-radius:9px;padding:13px 14px;font-size:.9rem;color:#1a1a1a;font-family:inherit;outline:none;transition:border-color .15s;background:#fafafa}
+.lf-input:focus{background:#fff;border-color:var(--lc)}
+.lf-field{margin-bottom:18px}
+.lf-pw-wrap{position:relative}
+.lf-pw-toggle{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#bbb;font-size:.78rem;padding:0}
+.lf-pw-toggle:hover{color:#666}
+.lf-remember{display:flex;align-items:center;gap:9px;margin-bottom:26px}
+.lf-checkbox{width:16px;height:16px;border:1.5px solid #ddd;border-radius:4px;cursor:pointer}
+.lf-remember-label{font-size:.8rem;color:#666}
+.lf-btn{width:100%;border:none;border-radius:9px;padding:14px;font-size:.92rem;font-weight:700;cursor:pointer;color:#fff;background:var(--lc);margin-bottom:18px;letter-spacing:.01em;transition:opacity .15s}
+.lf-btn:hover{opacity:.9}
+.lf-forgot{width:100%;text-align:center;font-size:.8rem;color:#aaa;cursor:pointer;background:none;border:none;margin-bottom:0;display:block}
+.lf-forgot:hover{color:#666}
+.lf-divider{height:1px;background:#f0f0f0;margin:24px 0}
+.lf-alt{text-align:center;font-size:.77rem;color:#bbb}
+
+/* ── UNIVERSAL BACK NAV ──────────────────────── */
+.nav-back-pill{
+  position:fixed;top:16px;left:16px;z-index:999;
+  display:none;
+  align-items:center;gap:8px;
+  background:#fff;border:1px solid #e0e0e0;
+  border-radius:24px;padding:8px 16px 8px 12px;
+  font-size:.78rem;font-weight:600;color:#444;
+  cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.09);
+  transition:box-shadow .15s;
+}
+.nav-back-pill:hover{box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.nav-back-pill .pill-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+}
+
+/* ── ANIMATIONS DÉCORATIVES ──────────────── */
+@keyframes float-a{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-22px) scale(1.04)}}
+@keyframes float-b{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(18px) scale(0.97)}}
+@keyframes pulse-bg{0%,100%{opacity:.05}50%{opacity:.11}}
+@keyframes spin-slow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes fade-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.deco-blob{position:absolute;border-radius:50%;pointer-events:none}
+.deco-a{animation:float-a 7s ease-in-out infinite}
+.deco-b{animation:float-b 9s ease-in-out infinite}
+.deco-pulse{animation:pulse-bg 5s ease-in-out infinite}
+/* login panels get animated blobs */
+.ll-deco{animation:float-a 8s ease-in-out infinite}
+.ll-deco2{animation:float-b 11s ease-in-out infinite}
+
+/* ── MASCOTTE HUMEURS ─────────────────────── */
+.mascot-intro{background:#faf7ff;border-radius:12px;padding:13px 15px;margin-bottom:13px;display:flex;align-items:center;gap:12px;border-left:3px solid #7C3AED}
+.mascot-ico{font-size:2rem;width:48px;height:48px;border-radius:50%;background:#f0e8ff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mascot-h-title{font-weight:700;font-size:.87rem;margin-bottom:2px}
+.mascot-h-note{font-size:.68rem;color:#aaa;font-style:italic}
+.mascot-placeholder{font-size:.6rem;color:#bbb;font-style:italic;margin-top:2px}
+
+.mood-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mood-opt{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px;border-radius:10px;border:2px solid transparent;cursor:pointer;background:#f8f8f8;transition:all .15s;text-align:center}
+.mood-opt:hover{border-color:#7C3AED;background:#faf5ff}
+.mood-opt.sel-m{border-color:#7C3AED;background:#f0e8ff;box-shadow:0 2px 8px rgba(124,58,237,.15)}
+.mo-face{font-size:1.8rem;transition:transform .15s}
+.mood-opt:hover .mo-face,.mood-opt.sel-m .mo-face{transform:scale(1.15)}
+.mo-lbl{font-size:.65rem;font-weight:700;color:#555;line-height:1.3}
+.mo-sub{font-size:.58rem;color:#aaa;line-height:1.2}
+
+/* ── WEEK NAV (planning) ──────────────────── */
+.week-nav-bar{display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:10px;padding:10px 16px;margin-bottom:14px;border:1px solid #e5e5e5}
+.wnb-btn{background:none;border:1px solid #e5e5e5;border-radius:7px;padding:6px 13px;font-size:.8rem;color:#555;cursor:pointer;transition:all .1s}
+.wnb-btn:hover{background:#f5f5f5;border-color:#bbb}
+.wnb-center{text-align:center}
+.wnb-label{font-size:.88rem;font-weight:700;color:#1a1a1a}
+.wnb-range{font-size:.7rem;color:#aaa;margin-top:1px}
+.wnb-hist-btn{background:#f0e8ff;color:#7C3AED;border:none;border-radius:20px;padding:4px 12px;font-size:.72rem;font-weight:700;cursor:pointer}
+.wnb-hist-btn:hover{background:#e8d8ff}
+
+/* Drag & drop slots */
+.act-slot[draggable=true]{cursor:grab;position:relative}
+.act-slot[draggable=true]:active{cursor:grabbing;opacity:.7}
+.drag-handle{position:absolute;top:8px;right:8px;color:#ddd;font-size:.75rem;cursor:grab;user-select:none}
+.drop-zone{border:2px dashed #e0e0e0;border-radius:8px;padding:14px;text-align:center;color:#ccc;font-size:.78rem;background:#fafafa;min-height:60px;display:flex;align-items:center;justify-content:center}
+.drop-zone.drag-over{border-color:#7C3AED;color:#7C3AED;background:#faf5ff}
+
+/* History drawer */
+.hist-panel{background:#fff;border-radius:12px;padding:16px;margin-top:14px;display:none}
+.hist-panel.visible{display:block;animation:fade-in .2s ease}
+.hist-week-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0;cursor:pointer}
+.hist-week-row:last-child{border-bottom:none}
+.hist-week-row:hover{color:#7C3AED}
+.hwl{font-size:.82rem;font-weight:600}
+.hws{font-size:.72rem;color:#aaa;margin-left:auto}
+
+/* ── PRESENCES ────────────────────────────── */
+.pres-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.pres-kpi{background:#fff;border-radius:10px;padding:14px 16px}
+.pres-kpi-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#aaa;margin-bottom:6px}
+.pres-kpi-val{font-size:1.6rem;font-weight:800}
+.pres-kpi-sub{font-size:.7rem;color:#aaa;margin-top:2px}
+
+.pres-section{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:18px}
+.pres-sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid #f0f0f0}
+.pres-sec-title{font-weight:700;font-size:.92rem;display:flex;align-items:center;gap:8px}
+.pres-cols-children{grid-template-columns:1fr 90px 90px 90px 90px 100px}
+.pres-cols-staff{grid-template-columns:1fr 90px 90px 90px 100px}
+.pres-hdr,.pres-row{display:grid;align-items:center;padding:10px 18px;gap:8px}
+.pres-hdr{background:#f8f8f8;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#aaa;border-bottom:1px solid #f0f0f0}
+.pres-row{border-bottom:1px solid #f5f5f5;transition:background .1s}
+.pres-row:last-child{border-bottom:none}
+.pres-row:hover{background:#fafafa}
+.pr-name{font-weight:600;font-size:.87rem}
+.pr-room{font-size:.68rem;color:#aaa}
+.pres-time{border:1.5px solid #e5e5e5;border-radius:7px;padding:5px 8px;font-size:.8rem;color:#333;width:80px;font-family:inherit;background:#fafafa}
+.pres-time:focus{border-color:#2A9D8F;outline:none;background:#fff}
+.pres-time.edu-focus:focus{border-color:#7C3AED}
+.chk-btn{border:none;border-radius:7px;padding:6px 10px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .1s}
+.chk-in{background:#e0f5f0;color:#1a7a52}
+.chk-out{background:#FFF3D0;color:#8a5a00}
+.chk-abs{background:#ffe0e0;color:#c00}
+.chk-in:hover{background:#c8f0e4}
+.chk-out:hover{background:#ffe8a0}
+.ps-present::before{content:"●";color:#1a7a52;margin-right:4px}
+.ps-absent::before{content:"●";color:#c00;margin-right:4px}
+.ps-pending::before{content:"●";color:#aaa;margin-right:4px}
+.pres-status{font-size:.75rem;font-weight:600}
+
+/* ── AFFECTATIONS ─────────────────────────── */
+.affec-body{display:grid;grid-template-columns:230px 1fr;gap:18px;align-items:start}
+.staff-pool{background:#fff;border-radius:12px;padding:15px;position:sticky;top:20px}
+.sp-title{font-weight:700;font-size:.88rem;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.sp-count{background:#FFF3D0;color:#C85A00;font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:10px}
+.sp-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;border:1.5px solid #e5e5e5;margin-bottom:7px;cursor:grab;transition:all .15s;background:#fff}
+.sp-item:hover{border-color:#C85A00;background:#fff8f0;transform:translateX(3px)}
+.sp-item.sp-assigned{opacity:.5;cursor:default;border-color:#e5e5e5}
+.sp-item.sp-assigned:hover{transform:none;background:#fff}
+.sp-ava{width:32px;height:32px;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.sp-info-name{font-weight:600;font-size:.8rem}
+.sp-info-cert{font-size:.65rem;color:#aaa}
+.sp-drag{color:#ddd;font-size:.85rem;margin-left:auto}
+.sp-avail-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot-green{background:#1a7a52}
+.dot-grey{background:#bbb}
+
+.rooms-assign{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.ra-card{background:#fff;border-radius:12px;padding:17px;border:1px solid #e5e5e5}
+.ra-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:13px}
+.ra-room-name{font-weight:700;font-size:.95rem}
+.ra-room-age{font-size:.7rem;color:#aaa;margin-top:2px}
+.ra-ratio{display:flex;align-items:center;gap:5px;font-size:.73rem;font-weight:700;padding:3px 8px;border-radius:20px}
+.ra-ratio-ok{background:#d0f5d0;color:#1a7a1a}
+.ra-ratio-warn{background:#ffe0d0;color:#c04000}
+.ra-slot{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:8px;margin-bottom:7px;border:1.5px dashed #e0e0e0;background:#f8f8f8}
+.ra-slot.filled{border:1.5px solid #e5e5e5;border-left:3px solid #C85A00;background:#fff}
+.ra-slot-ava{width:28px;height:28px;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+.ra-slot-name{font-size:.82rem;font-weight:600;flex:1}
+.ra-slot-hours{font-size:.68rem;color:#aaa}
+.ra-remove{background:none;border:none;color:#ddd;cursor:pointer;font-size:.85rem;padding:0;margin-left:auto}
+.ra-remove:hover{color:#c00}
+.ra-add-btn{width:100%;border:2px dashed #e0e0e0;border-radius:8px;padding:9px;font-size:.78rem;color:#bbb;cursor:pointer;background:none;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px}
+.ra-add-btn:hover{border-color:#C85A00;color:#C85A00}
+.ra-children-count{font-size:.72rem;color:#888;margin-top:10px;padding-top:10px;border-top:1px solid #f0f0f0}
+
+/* ── PARENT ACCUEIL ───────────────────────── */
+.events-card{background:#fff;border-radius:12px;overflow:hidden;margin-bottom:16px}
+.evt-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f0f0f0}
+.evt-hdr-title{font-weight:700;font-size:.92rem}
+.evt-see-all{font-size:.78rem;color:#2A9D8F;cursor:pointer;font-weight:600}
+.evt-item{display:flex;align-items:flex-start;gap:14px;padding:13px 18px;border-bottom:1px solid #f5f5f5}
+.evt-item:last-child{border-bottom:none}
+.evt-date-box{min-width:42px;background:#e0f5f0;border-radius:8px;padding:6px;text-align:center;flex-shrink:0}
+.edb-day{font-size:1.2rem;font-weight:800;color:#2A9D8F;line-height:1}
+.edb-month{font-size:.58rem;text-transform:uppercase;color:#2A9D8F;font-weight:600}
+.evt-info-title{font-weight:600;font-size:.87rem;margin-bottom:3px}
+.evt-info-desc{font-size:.76rem;color:#888;line-height:1.5}
+.evt-tag{display:inline-block;background:#e0f5f0;color:#2A9D8F;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:4px;margin-top:5px}
+
+.journal-banner{border-radius:12px;padding:20px;color:#fff;margin-bottom:16px;position:relative;overflow:hidden;background:linear-gradient(135deg,#1a7a6d 0%,#2A9D8F 100%)}
+.jb-deco{position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.07);animation:float-a 8s ease-in-out infinite}
+.jb-deco2{position:absolute;right:50px;bottom:-55px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.05);animation:float-b 10s ease-in-out infinite}
+.jb-label{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.72;margin-bottom:5px;position:relative;z-index:2}
+.jb-title{font-size:1.05rem;font-weight:700;margin-bottom:4px;position:relative;z-index:2}
+.jb-preview{font-size:.8rem;opacity:.8;line-height:1.6;margin-bottom:15px;position:relative;z-index:2}
+.jb-btn{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:8px;padding:9px 18px;font-size:.8rem;font-weight:700;cursor:pointer;position:relative;z-index:2}
+
+.quick-links{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.ql{background:#fff;border-radius:10px;padding:13px;display:flex;align-items:center;gap:10px;cursor:pointer;border:1.5px solid #e5e5e5;transition:all .15s}
+.ql:hover{border-color:#2A9D8F;box-shadow:0 2px 8px rgba(42,157,143,.1);transform:translateY(-1px)}
+.ql-ico{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.ql-name{font-size:.82rem;font-weight:700}
+.ql-sub{font-size:.67rem;color:#aaa}
+
+/* ── PARENT PROGRAMME ─────────────────────── */
+.room-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.room-tab{padding:8px 16px;border-radius:20px;font-size:.8rem;font-weight:600;cursor:pointer;border:1.5px solid #e5e5e5;background:#fff;color:#555;transition:all .15s}
+.room-tab:hover{border-color:#2A9D8F;color:#2A9D8F}
+.room-tab.active{background:#2A9D8F;color:#fff;border-color:#2A9D8F}
+
+/* ── ADMIN PROGRAMMES ─────────────────────── */
+.prog-room-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.prt{padding:8px 16px;border-radius:20px;font-size:.8rem;font-weight:600;cursor:pointer;border:1.5px solid #e5e5e5;background:#fff;color:#555;transition:all .15s}
+.prt:hover{border-color:#C85A00;color:#C85A00}
+.prt.active{background:#C85A00;color:#fff;border-color:#C85A00}
+
+/* ── LANDING DECO ─────────────────────────── */
+.landing-deco-wrap{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+
+/* ── COPY WEEK MODAL ──────────────────────── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:16px;padding:28px 26px;width:460px;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:fade-in .18s ease}
+.modal-title{font-size:1.1rem;font-weight:800;margin-bottom:5px;display:flex;align-items:center;gap:10px}
+.modal-sub{font-size:.8rem;color:#aaa;margin-bottom:20px}
+.copy-week-item{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-radius:10px;border:1.5px solid #e5e5e5;margin-bottom:9px;cursor:pointer;transition:all .15s}
+.copy-week-item:hover{border-color:#7C3AED;background:#faf5ff;transform:translateX(3px)}
+.cwi-left{display:flex;align-items:center;gap:12px}
+.cwi-icon{width:36px;height:36px;border-radius:8px;background:#f0e8ff;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.cwi-label{font-weight:600;font-size:.87rem}
+.cwi-range{font-size:.7rem;color:#aaa;margin-top:2px}
+.cwi-count{font-size:.72rem;font-weight:700;color:#7C3AED;background:#f0e8ff;padding:3px 9px;border-radius:12px}
+.modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0}
+.modal-cancel{background:#f5f5f5;border:none;border-radius:8px;padding:10px 18px;font-size:.85rem;font-weight:600;cursor:pointer;color:#555}
+.modal-cancel:hover{background:#ebebeb}
+
+/* copy success toast */
+.copy-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;border-radius:10px;padding:12px 20px;font-size:.83rem;font-weight:600;display:none;align-items:center;gap:9px;box-shadow:0 4px 16px rgba(0,0,0,.25);z-index:400;animation:fade-in .2s ease}
+.copy-toast.show{display:flex}
+
+/* ── WHITEBOARD CARD ──────────────────────── */
+.wb-card{background:#fff;border-radius:12px;margin-bottom:16px;overflow:hidden;border:1px solid #e5e5e5;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.wb-header{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid #f0f0f0;background:#fafafa}
+.wb-header-title{font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px}
+.wb-dot{width:8px;height:8px;border-radius:50%;background:#2A9D8F;animation:pulse-bg 3s ease-in-out infinite}
+.wb-date{font-size:.73rem;color:#aaa}
+.wb-item{display:flex;align-items:flex-start;gap:12px;padding:12px 18px;border-bottom:1px solid #f8f8f8}
+.wb-item:last-child{border-bottom:none}
+.wb-tag{font-size:.6rem;font-weight:800;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.wb-menu{background:#e0f5f0;color:#1a7a6d}
+.wb-activite{background:#f0e8ff;color:#7C3AED}
+.wb-rappel{background:#FFF3D0;color:#8a5a00}
+.wb-annonce{background:#ffe0d0;color:#c04000}
+.wb-text{font-size:.82rem;color:#333;line-height:1.55}
+
+/* ── ADMIN TABLEAU BLANC ──────────────────── */
+.tableau-layout{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}
+.tbl-form{background:#fff;border-radius:12px;padding:22px}
+.tbl-form-title{font-weight:700;font-size:.95rem;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.tbl-field{margin-bottom:16px}
+.tbl-label{display:block;font-size:.78rem;font-weight:700;color:#333;letter-spacing:.01em;margin-bottom:6px}
+.tbl-input{width:100%;border:1.5px solid #e5e5e5;border-radius:8px;padding:10px 12px;font-size:.87rem;color:#1a1a1a;font-family:inherit;outline:none;transition:border-color .15s;background:#fafafa}
+.tbl-input:focus{border-color:#C85A00;background:#fff}
+.tbl-textarea{width:100%;border:1.5px solid #e5e5e5;border-radius:8px;padding:12px;font-size:.85rem;color:#1a1a1a;font-family:inherit;outline:none;resize:vertical;height:110px;transition:border-color .15s;background:#fafafa}
+.tbl-textarea:focus{border-color:#C85A00;background:#fff}
+.tbl-select{width:100%;border:1.5px solid #e5e5e5;border-radius:8px;padding:10px 12px;font-size:.87rem;color:#333;font-family:inherit;appearance:none;background:#fafafa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E") no-repeat right 12px center;cursor:pointer}
+.tbl-type-pills{display:flex;gap:7px;flex-wrap:wrap}
+.tbl-pill{padding:6px 13px;border-radius:20px;font-size:.75rem;font-weight:700;cursor:pointer;border:1.5px solid #e5e5e5;background:#fff;color:#555;transition:all .15s}
+.tbl-pill:hover{border-color:#C85A00}
+.tbl-pill.active-pill{background:#C85A00;color:#fff;border-color:#C85A00}
+.tbl-pill.menu-pill.active-pill{background:#1a7a6d;border-color:#1a7a6d}
+.tbl-pill.activite-pill.active-pill{background:#7C3AED;border-color:#7C3AED}
+.tbl-pill.rappel-pill.active-pill{background:#f0a000;border-color:#f0a000}
+
+.tbl-preview{background:#fff;border-radius:12px;padding:18px;position:sticky;top:20px}
+.tbl-prev-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#aaa;margin-bottom:13px}
+.tbl-prev-card{border-radius:10px;border:1px solid #e5e5e5;overflow:hidden}
+.tbl-prev-hdr{background:#fafafa;padding:10px 13px;font-size:.8rem;font-weight:700;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:7px;color:#555}
+.tbl-prev-body{padding:12px 13px}
+.tbl-prev-tag{display:inline-block;font-size:.62rem;font-weight:800;padding:2px 7px;border-radius:4px;text-transform:uppercase;margin-bottom:6px}
+.tbl-prev-text{font-size:.82rem;color:#333;line-height:1.55;font-style:italic}
+
+.tbl-list{background:#fff;border-radius:12px;overflow:hidden;margin-top:20px}
+.tbl-list-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f0f0f0;font-weight:700;font-size:.9rem}
+.tbl-list-row{display:grid;grid-template-columns:1fr 100px 120px 90px 100px;gap:8px;padding:12px 18px;align-items:center;border-bottom:1px solid #f5f5f5}
+.tbl-list-row:last-child{border-bottom:none}
+.tbl-list-row:hover{background:#fafafa}
+.tbl-list-hdr-row{display:grid;grid-template-columns:1fr 100px 120px 90px 100px;gap:8px;padding:9px 18px;border-bottom:1px solid #f0f0f0;background:#f8f8f8;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#aaa}
+.pub-badge{display:inline-block;padding:3px 9px;border-radius:12px;font-size:.67rem;font-weight:700}
+.pub-active{background:#d0f5d0;color:#1a7a1a}
+.pub-draft{background:#f0f0f0;color:#666}
+.pub-expired{background:#ffe0e0;color:#c00}
+</style>
+</head>
+<body>
+<button id="global-back" class="nav-back-pill" onclick="goBack()">
+  <span class="pill-dot" id="pill-dot"></span>
+  <span id="pill-label">← Retour</span>
+</button>
+
+<!-- ═══════════════════════════════════════
+     LANDING
+═══════════════════════════════════════ -->
+<div id="landing" class="screen" style="background:#f2f4f6;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;position:relative;overflow:hidden">
+  <!-- Decorative background blobs -->
+  <div class="deco-blob deco-a" style="width:320px;height:320px;background:rgba(42,157,143,.07);top:-60px;right:-60px"></div>
+  <div class="deco-blob deco-b" style="width:240px;height:240px;background:rgba(124,58,237,.05);bottom:-40px;left:-40px"></div>
+  <div class="deco-blob deco-a" style="width:160px;height:160px;background:rgba(200,90,0,.04);top:40%;left:5%"></div>
+  <div style="width:100%;max-width:940px;padding:0 28px;position:relative;z-index:1">
+
+    <!-- Header -->
+    <div style="text-align:center;margin-bottom:56px">
+      <div style="display:inline-block;width:36px;height:4px;background:#2A9D8F;border-radius:2px;margin-bottom:20px"></div>
+      <div style="font-size:1.75rem;font-weight:800;color:#1a1a1a;letter-spacing:-.025em;margin-bottom:8px">Bout de Choux</div>
+      <div style="font-size:.88rem;color:#888;letter-spacing:.01em">Système de gestion de crèche — Choisissez votre espace de connexion</div>
+    </div>
+
+    <!-- Role cards -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:48px">
+
+      <!-- Parent -->
+      <div onclick="show('login-parent')" style="cursor:pointer;background:#fff;border-radius:12px;padding:32px 26px;border:1.5px solid #e8e8e8;box-shadow:0 1px 3px rgba(0,0,0,.05);transition:all .2s"
+           onmouseover="this.style.borderColor='#2A9D8F';this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(42,157,143,.12)'"
+           onmouseout="this.style.borderColor='#e8e8e8';this.style.transform='none';this.style.boxShadow='0 1px 3px rgba(0,0,0,.05)'">
+        <div style="width:44px;height:44px;border-radius:10px;background:#e0f5f0;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:#2A9D8F;margin-bottom:20px;letter-spacing:-.01em">P</div>
+        <div style="font-weight:700;font-size:.97rem;margin-bottom:7px;color:#1a1a1a">Espace Parent</div>
+        <div style="font-size:.8rem;color:#999;line-height:1.6;margin-bottom:24px">Fiches journalières, galerie photos et déclarations d'absence de vos enfants.</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:.8rem;font-weight:600;color:#2A9D8F">Se connecter</span>
+          <span style="font-size:.9rem;color:#2A9D8F;font-weight:700">›</span>
+        </div>
+      </div>
+
+      <!-- Éducatrice -->
+      <div onclick="show('login-edu')" style="cursor:pointer;background:#fff;border-radius:12px;padding:32px 26px;border:1.5px solid #e8e8e8;box-shadow:0 1px 3px rgba(0,0,0,.05);transition:all .2s"
+           onmouseover="this.style.borderColor='#7C3AED';this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(124,58,237,.12)'"
+           onmouseout="this.style.borderColor='#e8e8e8';this.style.transform='none';this.style.boxShadow='0 1px 3px rgba(0,0,0,.05)'">
+        <div style="width:44px;height:44px;border-radius:10px;background:#f0e8ff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:#7C3AED;margin-bottom:20px">É</div>
+        <div style="font-weight:700;font-size:.97rem;margin-bottom:7px;color:#1a1a1a">Éducatrice</div>
+        <div style="font-size:.8rem;color:#999;line-height:1.6;margin-bottom:24px">Saisie journalière, programme hebdomadaire et carnet de développement.</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:.8rem;font-weight:600;color:#7C3AED">Se connecter</span>
+          <span style="font-size:.9rem;color:#7C3AED;font-weight:700">›</span>
+        </div>
+      </div>
+
+      <!-- Direction -->
+      <div onclick="show('login-admin')" style="cursor:pointer;background:#fff;border-radius:12px;padding:32px 26px;border:1.5px solid #e8e8e8;box-shadow:0 1px 3px rgba(0,0,0,.05);transition:all .2s"
+           onmouseover="this.style.borderColor='#C85A00';this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(200,90,0,.12)'"
+           onmouseout="this.style.borderColor='#e8e8e8';this.style.transform='none';this.style.boxShadow='0 1px 3px rgba(0,0,0,.05)'">
+        <div style="width:44px;height:44px;border-radius:10px;background:#fff0d8;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:#C85A00;margin-bottom:20px">D</div>
+        <div style="font-weight:700;font-size:.97rem;margin-bottom:7px;color:#1a1a1a">Direction</div>
+        <div style="font-size:.8rem;color:#999;line-height:1.6;margin-bottom:24px">Gestion des locaux, ratios d'encadrement, inscriptions et rapports officiels.</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:.8rem;font-weight:600;color:#C85A00">Se connecter</span>
+          <span style="font-size:.9rem;color:#C85A00;font-weight:700">›</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align:center;font-size:.73rem;color:#bbb;letter-spacing:.02em">
+      © 2024 Bout de Choux &nbsp;·&nbsp; Confidentialité &nbsp;·&nbsp; Support &nbsp;·&nbsp; Documentation
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     LOGIN — ESPACE PARENT
+═══════════════════════════════════════ -->
+<div id="login-parent" class="screen" style="--lc:#2A9D8F">
+  <div class="login-wrap">
+    <!-- Left panel -->
+    <div class="login-left" style="background:#2A9D8F">
+      <div class="ll-deco"></div>
+      <div class="ll-deco2"></div>
+      <div>
+        <div class="ll-logo">Bout de Choux</div>
+        <div class="ll-portal">Espace Parent</div>
+      </div>
+      <div class="ll-center">
+        <div class="ll-letter">P</div>
+        <div class="ll-title">Suivez chaque<br>moment de votre enfant</div>
+        <div class="ll-desc">Accédez aux fiches journalières, galeries photos et déclarez les absences en toute simplicité.</div>
+      </div>
+      <div class="ll-footer">
+        <div class="ll-divider"></div>
+        <div class="ll-footer-text">Connexion sécurisée · Données chiffrées<br>Portail dédié aux familles</div>
+      </div>
+    </div>
+    <!-- Right panel -->
+    <div class="login-right">
+      <div class="login-form">
+        <button class="lf-back" onclick="show('landing')">‹ Changer d'espace</button>
+        <div class="lf-title">Connexion</div>
+        <div class="lf-sub">Entrez vos identifiants pour accéder<br>à l'espace parent.</div>
+        <div class="lf-field">
+          <label class="lf-label">Adresse e-mail</label>
+          <input class="lf-input" type="email" placeholder="votre@email.com">
+        </div>
+        <div class="lf-field">
+          <label class="lf-label">Mot de passe</label>
+          <div class="lf-pw-wrap">
+            <input class="lf-input" type="password" placeholder="••••••••" style="padding-right:44px">
+            <button class="lf-pw-toggle">Voir</button>
+          </div>
+        </div>
+        <div class="lf-remember">
+          <input type="checkbox" class="lf-checkbox" id="rm-parent">
+          <label class="lf-remember-label" for="rm-parent">Rester connecté</label>
+        </div>
+        <button class="lf-btn" onclick="show('parent-home')">Se connecter</button>
+        <button class="lf-forgot">Mot de passe oublié ?</button>
+        <div class="lf-divider"></div>
+        <div class="lf-alt">Première connexion ? Contactez l'administration<br>de votre crèche pour obtenir vos accès.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     LOGIN — ÉDUCATRICE
+═══════════════════════════════════════ -->
+<div id="login-edu" class="screen" style="--lc:#7C3AED">
+  <div class="login-wrap">
+    <div class="login-left" style="background:#7C3AED">
+      <div class="ll-deco"></div>
+      <div class="ll-deco2"></div>
+      <div>
+        <div class="ll-logo">Bout de Choux</div>
+        <div class="ll-portal">Portail Éducatrice</div>
+      </div>
+      <div class="ll-center">
+        <div class="ll-letter">É</div>
+        <div class="ll-title">Votre espace<br>de travail quotidien</div>
+        <div class="ll-desc">Saisie journalière, programme de la semaine et suivi du développement des enfants.</div>
+      </div>
+      <div class="ll-footer">
+        <div class="ll-divider"></div>
+        <div class="ll-footer-text">Connexion sécurisée · Données chiffrées<br>Portail dédié au personnel éducatif</div>
+      </div>
+    </div>
+    <div class="login-right">
+      <div class="login-form">
+        <button class="lf-back" onclick="show('landing')">‹ Changer d'espace</button>
+        <div class="lf-title">Connexion</div>
+        <div class="lf-sub">Entrez vos identifiants pour accéder<br>au portail éducatrice.</div>
+        <div class="lf-field">
+          <label class="lf-label">Adresse e-mail</label>
+          <input class="lf-input" type="email" placeholder="prenom.nom@creche.ca">
+        </div>
+        <div class="lf-field">
+          <label class="lf-label">Mot de passe</label>
+          <div class="lf-pw-wrap">
+            <input class="lf-input" type="password" placeholder="••••••••" style="padding-right:44px">
+            <button class="lf-pw-toggle">Voir</button>
+          </div>
+        </div>
+        <div class="lf-remember">
+          <input type="checkbox" class="lf-checkbox" id="rm-edu">
+          <label class="lf-remember-label" for="rm-edu">Rester connecté</label>
+        </div>
+        <button class="lf-btn" onclick="show('edu-saisie')">Se connecter</button>
+        <button class="lf-forgot">Mot de passe oublié ?</button>
+        <div class="lf-divider"></div>
+        <div class="lf-alt">Accès réservé au personnel éducatif.<br>Contactez la direction pour tout problème de connexion.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     LOGIN — DIRECTION / ADMIN
+═══════════════════════════════════════ -->
+<div id="login-admin" class="screen" style="--lc:#C85A00">
+  <div class="login-wrap">
+    <div class="login-left" style="background:#C85A00">
+      <div class="ll-deco"></div>
+      <div class="ll-deco2"></div>
+      <div>
+        <div class="ll-logo">Bout de Choux</div>
+        <div class="ll-portal">Portail Direction</div>
+      </div>
+      <div class="ll-center">
+        <div class="ll-letter">D</div>
+        <div class="ll-title">Gérez votre crèche<br>en toute clarté</div>
+        <div class="ll-desc">Locaux, ratios d'encadrement, inscriptions, rapports gouvernementaux et bien plus.</div>
+      </div>
+      <div class="ll-footer">
+        <div class="ll-divider"></div>
+        <div class="ll-footer-text">Connexion sécurisée · Données chiffrées<br>Accès réservé à la direction</div>
+      </div>
+    </div>
+    <div class="login-right">
+      <div class="login-form">
+        <button class="lf-back" onclick="show('landing')">‹ Changer d'espace</button>
+        <div class="lf-title">Connexion</div>
+        <div class="lf-sub">Entrez vos identifiants administrateur<br>pour accéder au tableau de bord.</div>
+        <div class="lf-field">
+          <label class="lf-label">Identifiant administrateur</label>
+          <input class="lf-input" type="email" placeholder="direction@boutdechoux.ca">
+        </div>
+        <div class="lf-field">
+          <label class="lf-label">Mot de passe</label>
+          <div class="lf-pw-wrap">
+            <input class="lf-input" type="password" placeholder="••••••••" style="padding-right:44px">
+            <button class="lf-pw-toggle">Voir</button>
+          </div>
+        </div>
+        <div class="lf-remember">
+          <input type="checkbox" class="lf-checkbox" id="rm-admin">
+          <label class="lf-remember-label" for="rm-admin">Rester connecté sur cet appareil</label>
+        </div>
+        <button class="lf-btn" onclick="show('admin-locaux')">Se connecter</button>
+        <button class="lf-forgot">Mot de passe oublié ?</button>
+        <div class="lf-divider"></div>
+        <div class="lf-alt">Deux facteurs d'authentification disponibles.<br>Consultez la documentation pour l'activation.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PARENT HOME (Espace Parent / Fiche journalière)
+═══════════════════════════════════════ -->
+<div id="parent-home" class="screen">
+  <div class="ps-layout" style="flex:1">
+    <!-- Sidebar: child selector -->
+    <div class="phs-sidebar">
+      <div class="phs-header">
+        <div class="phs-title">Espace Parent</div>
+        <div class="phs-sub">Sélectionnez un enfant</div>
+      </div>
+      <div class="child-list">
+        <div class="child-item sel">
+          <div class="ci-ava">👦</div>
+          <div>
+            <div class="ci-name">Lucas</div>
+            <div class="ci-dob">Né le 12/05/2021</div>
+          </div>
+        </div>
+        <div class="child-item">
+          <div class="ci-ava" style="background:#e5e5e5">👦</div>
+          <div>
+            <div class="ci-name">Stéphane</div>
+            <div class="ci-dob">Né le 03/09/2019</div>
+          </div>
+        </div>
+        <div class="child-item">
+          <div class="ci-ava" style="background:#e5e5e5">👧</div>
+          <div>
+            <div class="ci-name">Céline</div>
+            <div class="ci-dob">Née le 15/01/2022</div>
+          </div>
+        </div>
+      </div>
+      <div class="phs-bottom">
+        <button class="ps-add-btn">＋ Ajouter un enfant</button>
+        <div class="ps-nav" style="margin-top:8px">
+          <div class="ps-nav-item" onclick="show('parent-accueil')">⊞ Accueil</div>
+          <div class="ps-nav-item" onclick="show('parent-absence')">🗓️ Déclarer une absence</div>
+          <div class="ps-nav-item" onclick="show('parent-programme')">📅 Programme</div>
+          <div class="ps-nav-item" onclick="show('parent-photos')">🖼️ Galerie</div>
+        </div>
+        <div class="ps-settings">⚙️ Paramètres</div>
+        <div class="back-lnk" onclick="show('landing')" style="padding:8px 18px">← Changer de rôle</div>
+      </div>
+    </div>
+    <!-- Main content -->
+    <div class="ps-main">
+      <div class="ps-topbar">
+        <span class="topbar-icon">🔔</span>
+        <span class="topbar-icon">👤</span>
+      </div>
+      <div class="daily-content">
+        <div class="tabs-bar">
+          <div class="tab t-teal">Fiche journalière</div>
+          <div class="tab">Messages</div>
+        </div>
+        <!-- Humeur -->
+        <div class="card mb16">
+          <div class="sec-h">😊 Humeur &amp; Participation</div>
+          <div class="mood-row">
+            <div>
+              <div class="mood-circle mc-t">😊</div>
+              <div class="mood-lbl">Souriant</div>
+            </div>
+            <div>
+              <div class="mood-circle mc-o">⭐</div>
+              <div class="mood-lbl">Étoile</div>
+            </div>
+            <div>
+              <div class="mood-circle mc-pk">❤️</div>
+              <div class="mood-lbl">Cœur</div>
+            </div>
+          </div>
+        </div>
+        <div class="g2 mb16">
+          <!-- Appétit -->
+          <div class="card">
+            <div class="sec-h">🍽️ Appétit</div>
+            <div class="ap-row"><span class="ap-name">Déjeuner</span><span class="forks">🍴🍴🍴</span></div>
+            <div class="ap-row"><span class="ap-name">Collation AM</span><span class="forks">🍴🍴</span></div>
+            <div class="ap-row"><span class="ap-name">Dîner</span><span class="forks">🍴🍴🍴</span></div>
+            <div class="ap-row"><span class="ap-name">Collation PM</span><span class="forks">🍴🍴🍴</span></div>
+          </div>
+          <!-- Sieste -->
+          <div class="card">
+            <div class="sieste-block">
+              <div class="sieste-icon">🌙</div>
+              <div style="font-size:.82rem;color:#888">Sieste</div>
+              <div class="sieste-time">2h15</div>
+              <div class="sieste-lbl">de sommeil réparateur</div>
+            </div>
+          </div>
+        </div>
+        <!-- Commentaire éducatrice -->
+        <div class="edu-msg">
+          <div class="em-ava">👩</div>
+          <div>
+            <div class="em-title">Commentaires de l'éducatrice</div>
+            <div class="em-text">"Lucas a passé une excellente journée. Il s'est beaucoup amusé avec les blocs de construction et a bien dormi cet après-midi."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PARENT ABSENCE (Déclaration d'absence)
+═══════════════════════════════════════ -->
+<div id="parent-absence" class="screen">
+  <div class="ps-layout" style="flex:1">
+    <!-- Sidebar with nav -->
+    <div class="ps-sidebar">
+      <div class="ps-logo">Bout de Choux</div>
+      <div class="ps-child-card">
+        <div class="pcc-ava">👦</div>
+        <div>
+          <div class="pcc-name">Lucas</div>
+          <div class="pcc-role">Espace Parent</div>
+        </div>
+        <div class="pcc-chev">▾</div>
+      </div>
+      <button class="ps-add-btn mt8">＋ Ajouter un enfant</button>
+      <div class="ps-nav">
+        <div class="ps-nav-item" onclick="show('parent-accueil')">⊞ Accueil</div>
+        <div class="ps-nav-item" onclick="show('parent-home')">📋 Fiche journalière</div>
+        <div class="ps-nav-item" onclick="show('parent-programme')">📅 Programme de la semaine</div>
+        <div class="ps-nav-item active">🗓️ Déclarer une absence</div>
+        <div class="ps-nav-item" onclick="show('parent-photos')">🖼️ Galerie photos</div>
+        <div class="ps-nav-item">🧾 Factures</div>
+      </div>
+      <div class="ps-settings">⚙️ Paramètres</div>
+      <div class="back-lnk" onclick="show('landing')" style="padding:8px 18px">← Changer de rôle</div>
+    </div>
+    <!-- Main -->
+    <div class="ps-main">
+      <div class="ps-topbar">
+        <div style="font-size:1.3rem;font-weight:700;flex:1">Déclaration d'absence</div>
+        <span class="topbar-icon">🔔</span><span class="topbar-icon">👤</span>
+      </div>
+      <div class="ps-content">
+        <div class="tabs-bar">
+          <div class="tab t-teal">Déclaration d'absence</div>
+          <div class="tab">Factures &amp; Reçus</div>
+        </div>
+        <div class="absence-grid">
+          <!-- Calendar -->
+          <div class="card">
+            <div class="cal-nav">
+              <span class="cal-month">Octobre 2023</span>
+              <div><button class="cal-btn">‹</button><button class="cal-btn">›</button></div>
+            </div>
+            <div class="cal-grid">
+              <div class="cal-hdr">Lun</div><div class="cal-hdr">Mar</div><div class="cal-hdr">Mer</div><div class="cal-hdr">Jeu</div><div class="cal-hdr">Ven</div><div class="cal-hdr">Sam</div><div class="cal-hdr">Dim</div>
+              <div class="cal-day empty">25</div><div class="cal-day empty">26</div><div class="cal-day empty">27</div><div class="cal-day empty">28</div><div class="cal-day empty">29</div><div class="cal-day empty">30</div><div class="cal-day">1</div>
+              <div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day sel">7</div><div class="cal-day sel">8</div>
+              <div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day">15</div>
+              <div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div>
+              <div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div>
+              <div class="cal-day">30</div><div class="cal-day">31</div>
+            </div>
+            <div class="dates-summ">Dates sélectionnées :<br><span class="dates-val">7 Octobre – 8 Octobre 2023</span></div>
+          </div>
+          <!-- Details -->
+          <div class="card">
+            <div style="font-weight:600;font-size:.9rem;margin-bottom:14px">Détails de l'absence</div>
+            <label class="form-lbl">Motif de l'absence</label>
+            <select class="form-sel"><option>Maladie</option><option>Vacances</option><option>Rendez-vous médical</option><option>Congés familiaux</option></select>
+            <label class="form-lbl">Précisions complémentaires</label>
+            <textarea class="form-ta" placeholder="Veuillez donner plus de détails sur l'absence de Lucas..."></textarea>
+            <div class="alert-box">⚠️ Toute absence déclarée moins de 24h à l'avance doit également être signalée par téléphone à la direction.</div>
+            <button class="btn btn-tdark btn-full btn-lg">▶ Soumettre la déclaration</button>
+            <div class="divider"></div>
+            <div class="sec-sm-lbl">Historique récent</div>
+            <div class="histo-cards">
+              <div class="histo-card">
+                <div class="hc-date">12 Sept. 2023</div>
+                <div class="hc-reason">Rendez-vous médical</div>
+                <span class="badge b-validé">VALIDÉ</span>
+              </div>
+              <div class="histo-card" style="border-top-color:#aaa">
+                <div class="hc-date">02 Sept. 2023</div>
+                <div class="hc-reason">Congés familiaux</div>
+                <span class="badge b-complet">COMPLÉTÉ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="help-fab">?</button>
+</div>
+
+<!-- ═══════════════════════════════════════
+     GALERIE PHOTOS
+═══════════════════════════════════════ -->
+<div id="parent-photos" class="screen">
+  <div class="gallery-layout" style="flex:1">
+    <div class="gal-sidebar">
+      <div class="gal-logo">Bout de Choux</div>
+      <div class="gal-portal">Parent Portal</div>
+      <div class="gal-nav">
+        <div class="gal-nav-item" onclick="show('parent-accueil')">⊞ Accueil</div>
+        <div class="gal-nav-item" onclick="show('parent-home')">📋 Fiche journalière</div>
+        <div class="gal-nav-item" onclick="show('parent-programme')">📅 Programme</div>
+        <div class="gal-nav-item active">🖼️ Photos</div>
+        <div class="gal-nav-item" onclick="show('parent-absence')">🗓️ Absence</div>
+        <div class="gal-nav-item">💬 Messages</div>
+      </div>
+      <div class="gal-user">
+        <div class="gal-ua">👩</div>
+        <div>
+          <div class="gal-uname">Sophie Martin</div>
+          <div class="gal-urole">Maman de Léo</div>
+        </div>
+      </div>
+      <div class="back-lnk" onclick="show('landing')" style="padding:8px 12px">← Changer de rôle</div>
+    </div>
+    <div class="gal-main">
+      <div class="gal-header">
+        <div>
+          <div class="gal-title">Galerie Photos</div>
+          <div class="gal-sub">Retrouvez les moments précieux de la journée de votre enfant.</div>
+        </div>
+        <div class="period-tabs">
+          <div class="pt-item active">Cette semaine</div>
+          <div class="pt-item">Mai<br><span style="font-size:.65rem">2024</span></div>
+          <div class="pt-item">Avril<br><span style="font-size:.65rem">2024</span></div>
+          <div class="pt-cal">📅</div>
+        </div>
+      </div>
+      <div class="photo-grid">
+        <div class="photo-cell" style="background:linear-gradient(135deg,#ff9a4f,#ffd700)">🎨</div>
+        <div class="photo-cell" style="background:linear-gradient(135deg,#52c77f,#a8e6c0)">☀️</div>
+        <div class="photo-cell" style="background:linear-gradient(135deg,#ff6b6b,#ffd93d)">🍓</div>
+        <div class="photo-cell" style="background:linear-gradient(135deg,#4ecdc4,#1a7a6d)">📚</div>
+        <div class="photo-cell" style="background:linear-gradient(135deg,#d4a574,#c68642)">🧱</div>
+        <div class="photo-cell" style="background:linear-gradient(135deg,#c8d6e5,#8395a7)">🪴</div>
+        <div class="photo-cell" style="background:linear-gradient(135deg,#55efc4,#00b894)">🎵</div>
+        <div class="photo-cell" style="background:linear-gradient(135deg,#ffe8d6,#fcc59f)">💧</div>
+      </div>
+      <div style="text-align:center">
+        <button class="btn btn-tdark" style="border-radius:24px;padding:12px 28px">Voir plus de photos ▾</button>
+      </div>
+    </div>
+  </div>
+  <button class="share-fab">↗</button>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ADMIN — GESTION DES LOCAUX
+═══════════════════════════════════════ -->
+<div id="admin-locaux" class="screen">
+  <div class="admin-layout" style="flex:1">
+    <div class="admin-topnav">
+      <div class="admin-logo" onclick="show('landing')">Bout de Choux</div>
+      <div class="admin-nav-item">Utilisateurs</div>
+      <div class="admin-nav-item active" onclick="show('admin-locaux')">Locaux</div>
+      <div class="admin-nav-item" onclick="show('admin-horaires')">Enfants</div>
+      <div class="admin-nav-item" onclick="show('admin-affectations')">Affectations</div>
+      <div class="admin-nav-item">Messages</div>
+      <div class="admin-nav-item" onclick="show('admin-rapports')">Rapports</div>
+      <div class="admin-nav-item" onclick="show('admin-programmes')">Programmes</div>
+      <div class="admin-nav-item" onclick="show('admin-tableau')">Tableau blanc</div>
+      <div class="admin-nav-right">
+        <span class="topbar-icon">🔔</span><span class="topbar-icon">⚙️</span>
+        <div class="admin-ava">👩</div>
+      </div>
+    </div>
+    <div class="admin-content">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Gestion des locaux</div>
+          <div class="page-sub">Vue d'ensemble de l'occupation et de l'encadrement des salles.</div>
+        </div>
+        <button class="btn btn-orange" style="border-radius:10px;padding:11px 18px">🏠 Ajouter un local</button>
+      </div>
+      <div class="g4 mb16">
+        <div class="rc">
+          <div class="rc-top"><div class="rc-icon ri-pk">🦋</div><span class="badge b-full">Complet</span></div>
+          <div class="rc-name">Les Papillons</div>
+          <div class="rc-group">Groupe des 0-18 mois</div>
+          <div class="cap-bar"><div class="cap-fill cf-red"></div></div>
+          <div class="cap-txt">Capacité <strong class="cn-red">8 / 8 enfants</strong></div>
+          <div class="rc-edu"><div class="re-ava">👩</div><div><div class="re-lbl">Éducatrice</div><div class="re-name">Jacqueline Tremblay</div></div></div>
+          <div class="rc-actions"><span class="ra-mod">Modifier</span><span class="ra-del">Supprimer</span></div>
+        </div>
+        <div class="rc">
+          <div class="rc-top"><div class="rc-icon ri-t">🐞</div><span class="badge b-avail">Disponible</span></div>
+          <div class="rc-name">Les Coccinelles</div>
+          <div class="rc-group">Groupe des 18-36 mois</div>
+          <div class="cap-bar"><div class="cap-fill cf-orange"></div></div>
+          <div class="cap-txt">Capacité <strong class="cn-teal">10 / 12 enfants</strong></div>
+          <div class="rc-edu"><div class="re-ava">👩</div><div><div class="re-lbl">Éducatrice</div><div class="re-name">Marie-Pier Roy</div></div></div>
+          <div class="rc-actions"><span class="ra-mod">Modifier</span><span class="ra-del">Supprimer</span></div>
+        </div>
+        <div class="rc">
+          <div class="rc-top"><div class="rc-icon ri-o">🐝</div><span class="badge b-avail">Disponible</span></div>
+          <div class="rc-name">Les Abeilles</div>
+          <div class="rc-group">Groupe des 3-4 ans</div>
+          <div class="cap-bar"><div class="cap-fill cf-teal"></div></div>
+          <div class="cap-txt">Capacité <strong class="cn-teal">9 / 15 enfants</strong></div>
+          <div class="rc-edu"><div class="re-ava">👨</div><div><div class="re-lbl">Éducateur</div><div class="re-name">Simon Desjardins</div></div></div>
+          <div class="rc-actions"><span class="ra-mod">Modifier</span><span class="ra-del">Supprimer</span></div>
+        </div>
+        <div class="rc">
+          <div class="rc-top"><div class="rc-icon ri-p">🦗</div><span class="badge b-almost">Quasi-complet</span></div>
+          <div class="rc-name">Les Libellules</div>
+          <div class="rc-group">Groupe des 3-4 ans</div>
+          <div class="cap-bar"><div class="cap-fill cf-almost"></div></div>
+          <div class="cap-txt">Capacité <strong class="cn-red">9 / 10 enfants</strong></div>
+          <div class="rc-edu"><div class="re-ava">👩</div><div><div class="re-lbl">Éducatrice</div><div class="re-name">Sophie Martin</div></div></div>
+          <div class="rc-actions"><span class="ra-mod">Modifier</span><span class="ra-del">Supprimer</span></div>
+        </div>
+      </div>
+      <div class="stat-cards">
+        <div class="sc sc-t"><div class="sc-lbl">Capacité totale</div><div class="sc-val">36 / 45</div><div class="sc-ico">👥</div></div>
+        <div class="sc sc-p"><div class="sc-lbl">Locaux actifs</div><div class="sc-val">4 Salles</div><div class="sc-ico">🚪</div></div>
+        <div class="sc sc-b"><div class="sc-lbl">Moyenne occupation</div><div class="sc-val">80%</div><div class="sc-ico">📊</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ADMIN — HORAIRES & RATIOS
+═══════════════════════════════════════ -->
+<div id="admin-horaires" class="screen">
+  <div class="admin-layout" style="flex:1">
+    <div class="admin-topnav">
+      <div class="admin-logo" onclick="show('landing')">Bout de Choux</div>
+      <div class="admin-nav-item" onclick="show('admin-locaux')">Utilisateurs</div>
+      <div class="admin-nav-item" onclick="show('admin-locaux')">Locaux</div>
+      <div class="admin-nav-item active">Enfants</div>
+      <div class="admin-nav-item" onclick="show('admin-affectations')">Affectations</div>
+      <div class="admin-nav-item">Messages</div>
+      <div class="admin-nav-item" onclick="show('admin-rapports')">Rapports</div>
+      <div class="admin-nav-item" onclick="show('admin-programmes')">Programmes</div>
+      <div class="admin-nav-item" onclick="show('admin-tableau')">Tableau blanc</div>
+      <div class="admin-nav-right">
+        <span class="topbar-icon">🔔</span><span class="topbar-icon">⚙️</span>
+        <div class="admin-ava">👩</div>
+      </div>
+    </div>
+    <div class="admin-subtabs">
+      <div class="ast active" onclick="show('admin-horaires')">Horaires &amp; Ratios</div>
+      <div class="ast">Finances</div>
+      <div class="ast" onclick="show('admin-inscriptions')">Inscriptions</div>
+    </div>
+    <div class="admin-content">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Gestion des Horaires &amp; Ratios</div>
+          <div class="page-sub">Vue d'ensemble en temps réel de l'occupation par local.</div>
+        </div>
+        <button class="btn btn-orange" style="border-radius:10px;padding:11px 18px">📅 Planning de la semaine</button>
+      </div>
+      <div class="g4 mb16">
+        <!-- Papillons -->
+        <div class="ratio-card">
+          <div class="rh-top"><div><div class="rh-name">Papillons</div><div class="rh-age">0-18 mois</div></div><span class="b-conforme">CONFORME</span></div>
+          <div class="ratio-nums">
+            <div class="rn-b"><div class="rn-num">8</div><div class="rn-lbl">Enfants</div></div>
+            <div class="rn-div"></div>
+            <div class="rn-b"><div class="rn-num">2</div><div class="rn-lbl">Éducatrices</div></div>
+            <div class="ratio-bdg rb-ok">1:4</div>
+          </div>
+          <div class="staff-row"><div class="sr-ava">👩</div><div><div class="sr-name">Clara Dubois</div><div class="sr-h">8h00-16h00</div></div></div>
+          <div class="staff-row"><div class="sr-ava">👩</div><div><div class="sr-name">Marie Lefebvre</div><div class="sr-h">8h30-16h30</div></div></div>
+        </div>
+        <!-- Coccinelles (alerte) -->
+        <div class="ratio-card alert-rc">
+          <div class="rh-top"><div><div class="rh-name">Coccinelles</div><div class="rh-age">18-36 mois</div></div><span class="b-ajust">AJUSTEMENT REQUIS</span></div>
+          <div class="ratio-nums">
+            <div class="rn-b"><div class="rn-num">16</div><div class="rn-lbl">Enfants</div></div>
+            <div class="rn-div"></div>
+            <div class="rn-b"><div class="rn-num">1</div><div class="rn-lbl">Éducatrice</div></div>
+            <div class="ratio-bdg rb-w">1:16</div>
+          </div>
+          <div class="staff-row"><div class="sr-ava">👩</div><div><div class="sr-name">Sarah Bernier</div><div class="sr-h">7h30-15h30</div></div><div class="sr-warn">⚠️</div></div>
+          <button class="dashed-btn">👤+ Assigner du renfort</button>
+        </div>
+        <!-- Abeilles -->
+        <div class="ratio-card">
+          <div class="rh-top"><div><div class="rh-name">Abeilles</div><div class="rh-age">3-4 ans</div></div><span class="b-conforme">CONFORME</span></div>
+          <div class="ratio-nums">
+            <div class="rn-b"><div class="rn-num">20</div><div class="rn-lbl">Enfants</div></div>
+            <div class="rn-div"></div>
+            <div class="rn-b"><div class="rn-num">2</div><div class="rn-lbl">Éducatrices</div></div>
+            <div class="ratio-bdg rb-ok">1:10</div>
+          </div>
+          <div class="staff-row"><div class="sr-ava">👩</div><div><div class="sr-name">Julie Tremblay</div><div class="sr-h">9h00-17h00</div></div></div>
+          <div class="staff-row"><div class="sr-ava">👩</div><div><div class="sr-name">Élodie Roy</div><div class="sr-h">8h00-16h00</div></div></div>
+        </div>
+        <!-- Libellules -->
+        <div class="ratio-card">
+          <div class="rh-top"><div><div class="rh-name">Libellules</div><div class="rh-age">4-5 ans</div></div><span class="b-conforme">CONFORME</span></div>
+          <div class="ratio-nums">
+            <div class="rn-b"><div class="rn-num">12</div><div class="rn-lbl">Enfants</div></div>
+            <div class="rn-div"></div>
+            <div class="rn-b"><div class="rn-num">1</div><div class="rn-lbl">Éducatrice</div></div>
+            <div class="ratio-bdg rb-ok">1:12</div>
+          </div>
+          <div class="staff-row"><div class="sr-ava">👨</div><div><div class="sr-name">Thomas Gagnon</div><div class="sr-h">8h30-16h30</div></div></div>
+        </div>
+      </div>
+      <div class="ratios-bot">
+        <div class="info-box">
+          <div class="ib-title">ℹ️ Rappels des ratios légaux du gouvernement</div>
+          <div class="ib-body">Poupons (0-18 mois) : <strong>1:5</strong> &nbsp;•&nbsp; Trotteurs (18-36 mois) : <strong>1:8</strong> &nbsp;•&nbsp; Préscolaire (3-5 ans) : <strong>1:10+</strong></div>
+          <div class="ib-note">Dernière mise à jour : Mars 2024</div>
+        </div>
+        <div>
+          <div class="mini-stats mb16">
+            <div class="msr"><span class="msr-lbl">Total Enfants Présents</span><span class="msr-val msr-val-lg">56</span></div>
+            <div class="msr"><span class="msr-lbl">Personnel Actif</span><span class="msr-val">6/8</span></div>
+          </div>
+          <button class="btn btn-orange btn-full" style="border-radius:9px">🖨️ Exporter le registre journalier</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ADMIN — INSCRIPTIONS & LISTE D'ATTENTE
+═══════════════════════════════════════ -->
+<div id="admin-inscriptions" class="screen">
+  <div class="admin-layout" style="flex:1">
+    <div class="admin-topnav">
+      <div class="admin-logo" onclick="show('landing')">Bout de Choux</div>
+      <div class="admin-nav-item" onclick="show('admin-locaux')">Utilisateurs</div>
+      <div class="admin-nav-item" onclick="show('admin-locaux')">Locaux</div>
+      <div class="admin-nav-item active">Enfants</div>
+      <div class="admin-nav-item">Affectations</div>
+      <div class="admin-nav-item">Messages</div>
+      <div class="admin-nav-item" onclick="show('admin-rapports')">Rapports</div>
+      <div class="admin-nav-right">
+        <div class="admin-search">🔍 Rechercher...</div>
+        <span class="topbar-icon">🔔</span><span class="topbar-icon">⚙️</span>
+        <div class="admin-ava">👩</div>
+      </div>
+    </div>
+    <div class="admin-subtabs">
+      <div class="ast" onclick="show('admin-horaires')">Horaires &amp; Ratios</div>
+      <div class="ast">Finances</div>
+      <div class="ast active">Inscriptions</div>
+    </div>
+    <div class="admin-content">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Inscriptions &amp; Liste d'attente</div>
+          <div class="page-sub">Gérez les nouvelles demandes d'admission par ordre de priorité.</div>
+        </div>
+      </div>
+      <div class="ins-table">
+        <div class="it-hdr">
+          <div>Priorité</div><div>Parent</div><div>Enfant (Âge)</div><div>Date de demande</div><div>Statut</div><div>Actions</div>
+        </div>
+        <div class="it-row">
+          <div><span class="prio-bdg p1">Priorité 1</span></div>
+          <div><div class="p-name">Marie Lefebvre</div><div class="p-email">m.lefebvre@email.com</div></div>
+          <div><div class="c-name">Théo</div><div class="c-age">14 mois</div></div>
+          <div style="font-size:.82rem">12/05/2024</div>
+          <div><span class="status-dot"></span><span class="status-txt">En attente</span></div>
+          <div class="row-acts"><button class="btn-accept">✅ Accepter l'admission</button><button class="btn-wait">⊞ Laisser en attente</button></div>
+        </div>
+        <div class="it-row">
+          <div><span class="prio-bdg p2">Priorité 2</span></div>
+          <div><div class="p-name">Jean-Marc Dubois</div><div class="p-email">jm.dubois@email.com</div></div>
+          <div><div class="c-name">Léa</div><div class="c-age">8 mois</div></div>
+          <div style="font-size:.82rem">15/05/2024</div>
+          <div><span class="status-dot"></span><span class="status-txt">En attente</span></div>
+          <div class="row-acts"><button class="btn-accept">✅ Accepter l'admission</button><button class="btn-wait">⊞ Laisser en attente</button></div>
+        </div>
+        <div class="it-row">
+          <div><span class="prio-bdg p3">Priorité 3</span></div>
+          <div><div class="p-name">Claire Morel</div><div class="p-email">c.morel@email.com</div></div>
+          <div><div class="c-name">Enzo</div><div class="c-age">22 mois</div></div>
+          <div style="font-size:.82rem">18/05/2024</div>
+          <div><span class="status-dot"></span><span class="status-txt">En attente</span></div>
+          <div class="row-acts"><button class="btn-accept">✅ Accepter l'admission</button><button class="btn-wait">⊞ Laisser en attente</button></div>
+        </div>
+      </div>
+      <div class="g3">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="font-weight:600;font-size:.9rem">Capacité Totale</div><span style="font-size:1.1rem">👥</span></div>
+          <div style="font-size:1.7rem;font-weight:700">42 <span style="font-size:.9rem;color:#aaa;font-weight:400">/ 45 places</span></div>
+          <div style="height:6px;background:#eee;border-radius:3px;margin-top:8px"><div style="height:100%;width:93%;background:#c00;border-radius:3px"></div></div>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="font-weight:600;font-size:.9rem">Dossiers Urgents</div><span style="font-size:1.1rem">⚠️</span></div>
+          <div style="font-size:1.7rem;font-weight:700">05 <span style="font-size:.82rem;color:#aaa;font-weight:400">à traiter ce jour</span></div>
+          <div style="font-size:.73rem;color:#aaa;margin-top:8px;display:flex;gap:4px;align-items:center">ℹ️ Priorité calculée selon les fratries et CSP</div>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="font-weight:600;font-size:.9rem">Prochaines Admissions</div><span style="font-size:1.1rem">📅</span></div>
+          <div style="font-size:1.7rem;font-weight:700">12 <span style="font-size:.82rem;color:#aaa;font-weight:400">confirmées en Sept.</span></div>
+          <div style="display:flex;gap:4px;margin-top:8px">
+            <div style="width:26px;height:26px;border-radius:50%;background:#ddd"></div>
+            <div style="width:26px;height:26px;border-radius:50%;background:#ccc"></div>
+            <div style="width:26px;height:26px;border-radius:50%;background:#bbb"></div>
+            <div style="width:26px;height:26px;border-radius:50%;background:#e5e5e5;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:#666">+9</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ADMIN — RAPPORTS & STATS
+═══════════════════════════════════════ -->
+<div id="admin-rapports" class="screen">
+  <div class="rep-layout" style="flex:1">
+    <div class="rep-sidebar">
+      <div class="rep-office">
+        <div class="rep-oname">🍊 Main Office</div>
+        <div class="rep-obranch">North Branch</div>
+      </div>
+      <div class="rep-nav">
+        <div class="rep-nav-item">⊞ Overview</div>
+        <div class="rep-nav-item">👤 Enrollment</div>
+        <div class="rep-nav-item">✅ Attendance</div>
+        <div class="rep-nav-item">🛡️ Health &amp; Safety</div>
+        <div class="rep-nav-item">📖 Learning Progress</div>
+        <div class="rep-nav-item active">📊 Reports</div>
+      </div>
+      <button class="btn btn-odark btn-full" style="margin:12px;width:calc(100% - 24px);border-radius:8px;padding:10px">⬇ Export Data</button>
+      <div class="rep-bot">
+        <div class="rep-bot-item">❓ Support</div>
+        <div class="rep-bot-item" onclick="show('landing')">↩ Sign Out</div>
+      </div>
+    </div>
+    <div class="rep-main">
+      <div style="margin-bottom:18px">
+        <div style="font-size:1.5rem;font-weight:700">Centre de Rapports &amp; Stats</div>
+        <div style="font-size:.8rem;color:#aaa;margin-top:3px">Analyse de performance et génération de documents officiels.</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-title">Taux d'occupation global</div>
+          <div class="donut"><div class="donut-in">94%</div></div>
+          <div class="donut-note">Capacité optimale ce mois-ci</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title" style="display:flex;align-items:center;gap:8px"><span style="background:#ffe5d0;border-radius:8px;padding:5px 8px;font-size:1rem">👥</span> Total enfants inscrits</div>
+          <div class="kpi-num">56 <span class="kpi-unit">enfants</span></div>
+          <div class="kpi-trend">📈 +4% vs mois dernier</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title" style="display:flex;align-items:center;gap:8px"><span style="background:#f0e8ff;border-radius:8px;padding:5px 8px;font-size:1rem">🕐</span> Total heures de garde</div>
+          <div class="kpi-num">8 420 <span class="kpi-unit">heures</span></div>
+          <div class="kpi-note">ℹ️ Compilé pour la période actuelle</div>
+        </div>
+      </div>
+      <div class="exp-section">
+        <div class="exp-sec-hdr">
+          <span class="exp-sec-title">Exportation de rapports officiels</span>
+          <button class="btn btn-outline btn-sm">⊞ Filtrer</button>
+        </div>
+        <div class="exp-item">
+          <div class="exp-ico">📄</div>
+          <div class="exp-info"><div class="exp-name">Rapport de fréquentation pour le Ministère</div><div class="exp-desc">Période : Octobre 2023 • Format standard gouvernemental</div></div>
+          <div class="exp-acts"><button class="btn-pdf">📄 Générer PDF</button><button class="btn-xlsx">📊 Exporter Excel</button></div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-ico">📋</div>
+          <div class="exp-info"><div class="exp-name">Registre des présences mensuel</div><div class="exp-desc">Journal complet incluant les signatures numériques</div></div>
+          <div class="exp-acts"><button class="btn-pdf">📄 Générer PDF</button><button class="btn-xlsx">📊 Exporter Excel</button></div>
+        </div>
+        <div class="exp-item">
+          <div class="exp-ico">📅</div>
+          <div class="exp-info"><div class="exp-name">Relevé des heures éducatrices</div><div class="exp-desc">Cumulatif par employé pour la paie courante</div></div>
+          <div class="exp-acts"><button class="btn-pdf">📄 Générer PDF</button><button class="btn-xlsx">📊 Exporter Excel</button></div>
+        </div>
+      </div>
+      <div class="bot-duo">
+        <div class="quality-banner">
+          <div class="qb-text">
+            <div class="qb-title">Focus sur la Qualité</div>
+            <div class="qb-desc">Vos données permettent d'ajuster les ratios éducatifs pour le bien-être de chaque enfant.</div>
+          </div>
+        </div>
+        <div class="archives-box">
+          <div class="arch-ico">☁️</div>
+          <div class="arch-title">Archives Sécurisées</div>
+          <div class="arch-desc">Tous vos rapports sont stockés en toute sécurité et cryptés selon les normes RGPD.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ÉDUCATRICE — SAISIE JOURNALIÈRE
+═══════════════════════════════════════ -->
+<div id="edu-saisie" class="screen">
+  <div class="edu-layout" style="flex:1">
+    <div class="edu-topnav">
+      <div class="edu-logo">Bout de Choux</div>
+      <div class="edu-tnav active">Saisie journalière</div>
+      <div class="edu-tnav">Historique</div>
+      <div class="edu-tnav">Messages Direction</div>
+      <div class="edu-tnav">Messages Parents</div>
+      <div class="edu-tnav-right">
+        <span class="topbar-icon">🔔</span><span class="topbar-icon">⚙️</span>
+        <div class="admin-ava">👩</div>
+        <div class="back-lnk" onclick="show('landing')">← Rôles</div>
+      </div>
+    </div>
+    <div class="edu-subtabs">
+      <div class="est act-t" onclick="show('edu-saisie')">Saisie journalière</div>
+      <div class="est" onclick="show('edu-presences')">Présences</div>
+      <div class="est" onclick="show('edu-programme')">Programme</div>
+      <div class="est">Rapport d'incident</div>
+    </div>
+    <div class="edu-body">
+      <div class="edu-lsidebar">
+        <div class="els-class"><div class="els-cname">Classroom A</div><div class="els-crole">Educator Portal</div></div>
+        <div class="els-item active">👦 Kids</div>
+        <div class="els-item">🍽️ Meals</div>
+        <div class="els-item">🌙 Naps</div>
+        <div class="els-item">🎨 Activities</div>
+        <div class="els-new" onclick="show('edu-carnet')">New Entry</div>
+      </div>
+      <div style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+        <div class="edu-saisie-body">
+          <div class="saisie-phdr">
+            <div>
+              <div class="saisie-title">Fiche journalière</div>
+              <div class="saisie-child-row">
+                <div class="scr-ava">👦</div>
+                <div class="scr-name">Abraham Koffi</div>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <div class="saisie-date">Lundi 22 Mai, 2024</div>
+              <span class="badge-ec" style="margin-top:4px;display:inline-block">EN COURS</span>
+            </div>
+          </div>
+          <div style="margin-bottom:13px">
+            <div class="saisie-card">
+              <div class="mascot-intro">
+                <div class="mascot-ico">🐻</div>
+                <div>
+                  <div class="mascot-h-title">Comment va Abraham aujourd'hui ?</div>
+                  <div class="mascot-h-note">Choisissez l'humeur qui lui ressemble le mieux</div>
+                  <div class="mascot-placeholder">(Mascotte provisoire — à définir)</div>
+                </div>
+              </div>
+              <div class="mood-grid">
+                <div class="mood-opt sel-m" onclick="selectMood(this)">
+                  <div class="mo-face">😊</div>
+                  <div class="mo-lbl">Épanoui(e)</div>
+                  <div class="mo-sub">Rayonnant de joie</div>
+                </div>
+                <div class="mood-opt" onclick="selectMood(this)">
+                  <div class="mo-face">😜</div>
+                  <div class="mo-lbl">Joueur / Joueuse</div>
+                  <div class="mo-sub">Plein(e) d'énergie</div>
+                </div>
+                <div class="mood-opt" onclick="selectMood(this)">
+                  <div class="mo-face">😐</div>
+                  <div class="mo-lbl">Paisible</div>
+                  <div class="mo-sub">Calme et serein(e)</div>
+                </div>
+                <div class="mood-opt" onclick="selectMood(this)">
+                  <div class="mo-face">😢</div>
+                  <div class="mo-lbl">A besoin de réconfort</div>
+                  <div class="mo-sub">Un câlin fera du bien</div>
+                </div>
+                <div class="mood-opt" onclick="selectMood(this)">
+                  <div class="mo-face">😡</div>
+                  <div class="mo-lbl">Agité(e)</div>
+                  <div class="mo-sub">A besoin d'aide</div>
+                </div>
+                <div class="mood-opt" onclick="selectMood(this)">
+                  <div class="mo-face">😴</div>
+                  <div class="mo-lbl">Fatigué(e)</div>
+                  <div class="mo-sub">Repos bienvenu</div>
+                </div>
+              </div>
+            </div>
+            <div class="saisie-card">
+              <div class="saisie-card-h">👥 Participation</div>
+              <div class="p-icons">
+                <div class="p-ico">☀️</div>
+                <div class="p-ico sel">👍</div>
+                <div class="p-ico">✔️</div>
+                <div class="p-ico">☁️</div>
+              </div>
+              <div class="p-note">Niveau d'engagement aujourd'hui.</div>
+            </div>
+            <div class="saisie-card">
+              <div class="saisie-card-h">Respect des consignes</div>
+              <div class="consignes">
+                <div class="c-opt sel-g" onclick="selectConsigne(this)">
+                  <div style="width:46px;height:46px;background:#d0f5e0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem">🐻</div>
+                  <span>Excellent</span>
+                </div>
+                <div class="c-opt" onclick="selectConsigne(this)">
+                  <div style="width:46px;height:46px;background:#FFF3D0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem">🐻</div>
+                  <span>À surveiller</span>
+                </div>
+                <div class="c-opt" onclick="selectConsigne(this)">
+                  <div style="width:46px;height:46px;background:#ffe0d0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem">🐻</div>
+                  <span>Difficulté</span>
+                </div>
+              </div>
+            </div>
+            <div class="saisie-card">
+              <div class="saisie-card-h">🌙 Sieste &amp; Activités</div>
+              <div class="sieste-r">
+                <div class="sieste-o">🌙</div><div class="sieste-o">🌙</div>
+                <input class="sieste-inp" placeholder="Durée (ex: 1h30)">
+              </div>
+              <div class="act-icons">
+                <div class="act-ico">🎨</div><div class="act-ico">✏️</div><div class="act-ico">📖</div><div class="act-ico">⭐</div><div class="act-ico">🏃</div>
+              </div>
+            </div>
+          </div>
+          <div class="apt-card">
+            <div class="apt-hdr"><span>🍽️ Appétit — Repas</span><span>État / Quantité</span></div>
+            <div class="apt-row"><span class="apt-meal">Déjeuner</span><div class="apt-icos"><div class="apt-ico">😊</div><div class="apt-ico sel-p">🍴</div><div class="apt-ico">😐</div><div class="apt-ico">✋</div></div></div>
+            <div class="apt-row"><span class="apt-meal">Collation AM</span><div class="apt-icos"><div class="apt-ico sel-g">😊</div><div class="apt-ico">🍴</div><div class="apt-ico">😐</div><div class="apt-ico">✋</div></div></div>
+            <div class="apt-row"><span class="apt-meal">Dîner</span><div class="apt-icos"><div class="apt-ico sel-p">⭕</div><div class="apt-ico">🍴</div><div class="apt-ico">😐</div><div class="apt-ico">✋</div></div></div>
+            <div class="apt-row"><span class="apt-meal">Collation PM</span><div class="apt-icos"><div class="apt-ico">😊</div><div class="apt-ico">🍴</div><div class="apt-ico">😐</div><div class="apt-ico">✋</div></div></div>
+          </div>
+          <div class="comment-card">
+            <div class="cm-lbl">💬 Commentaires</div>
+            <textarea class="cm-area" placeholder="Partagez les moments forts de la journée d'Abraham..."></textarea>
+          </div>
+        </div>
+        <div class="saisie-footer">
+          <button class="btn-cancel">Annuler</button>
+          <button class="btn-save">⊞ Enregistrer la fiche</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ÉDUCATRICE — PROGRAMME DE LA SEMAINE
+═══════════════════════════════════════ -->
+<div id="edu-programme" class="screen">
+  <div class="edu-layout" style="flex:1">
+    <div class="edu-topnav">
+      <div class="edu-logo">Bout de Choux</div>
+      <div class="edu-tnav" onclick="show('edu-saisie')">Saisie journalière</div>
+      <div class="edu-tnav">Historique</div>
+      <div class="edu-tnav">Messages Direction</div>
+      <div class="edu-tnav">Messages Parents</div>
+      <div class="edu-tnav-right">
+        <span class="topbar-icon">🔔</span><span class="topbar-icon">⚙️</span>
+        <div class="admin-ava">👩</div>
+        <div class="back-lnk" onclick="show('landing')">← Rôles</div>
+      </div>
+    </div>
+    <div class="edu-subtabs">
+      <div class="est" onclick="show('edu-saisie')">Saisie journalière</div>
+      <div class="est" onclick="show('edu-presences')">Présences</div>
+      <div class="est act-p">Programme</div>
+      <div class="est">Rapport d'incident</div>
+    </div>
+    <div class="edu-body">
+      <div class="edu-lsidebar">
+        <div class="els-class"><div class="els-cname">Classroom A</div><div class="els-crole">Educator Portal</div></div>
+        <div class="els-item active">👦 Kids</div>
+        <div class="els-item">🍽️ Meals</div>
+        <div class="els-item">🌙 Naps</div>
+        <div class="els-item">🎨 Activities</div>
+        <div class="els-new" onclick="show('edu-carnet')">New Entry</div>
+      </div>
+      <div class="prog-body">
+        <div class="prog-hdr">
+          <div>
+            <div class="prog-title">Planning Hebdomadaire</div>
+            <div class="prog-sub">Classroom A</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-purple" style="border-radius:8px;padding:9px 16px">🖨️ Imprimer</button>
+            <button class="btn btn-outline" style="border-radius:8px;padding:9px 16px" onclick="openCopyModal()">📋 Copier une semaine</button>
+            <button class="wnb-hist-btn" style="padding:9px 16px;font-size:.82rem" onclick="toggleHist()">Historique ▾</button>
+          </div>
+        </div>
+        <!-- Week navigation -->
+        <div class="week-nav-bar">
+          <button class="wnb-btn" onclick="changeWeek(-1)">‹ Semaine précédente</button>
+          <div class="wnb-center">
+            <div class="wnb-label" id="week-label">Semaine 14 — 18 Octobre</div>
+            <div class="wnb-range" id="week-range">Semaine 42 / 2024</div>
+          </div>
+          <button class="wnb-btn" onclick="changeWeek(1)">Semaine suivante ›</button>
+        </div>
+        <!-- History panel -->
+        <div class="hist-panel" id="hist-panel">
+          <div style="font-weight:700;font-size:.88rem;margin-bottom:12px;color:#555">Semaines précédentes</div>
+          <div class="hist-week-row" onclick="loadWeek('S41')"><span class="hist-week-ico">📋</span><span class="hwl">Semaine 41 — 7 au 11 Oct.</span><span class="hws">15 activités</span></div>
+          <div class="hist-week-row" onclick="loadWeek('S40')"><span class="hist-week-ico">📋</span><span class="hwl">Semaine 40 — 30 Sept. au 4 Oct.</span><span class="hws">12 activités</span></div>
+          <div class="hist-week-row" onclick="loadWeek('S39')"><span class="hist-week-ico">📋</span><span class="hwl">Semaine 39 — 23 au 27 Sept.</span><span class="hws">14 activités</span></div>
+          <div class="hist-week-row" onclick="loadWeek('S38')"><span class="hist-week-ico">📋</span><span class="hwl">Semaine 38 — 16 au 20 Sept.</span><span class="hws">11 activités</span></div>
+        </div>
+        <div class="week-cols">
+          <div class="day-col">
+            <div class="day-hdr dh-today">Lundi<div class="dh-date">14 Octobre</div></div>
+            <div class="act-slot" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"><div class="at-time">9:30</div><div class="at-edit">✏️</div><div class="at-name">Jeux extérieurs ☀️</div><div class="at-desc">Parc de la mairie - Motricité globale</div></div>
+            <div class="act-slot" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"><div class="at-time">10:30</div><div class="at-edit">✏️</div><div class="at-name">Bricolage et peinture 🎨</div><div class="at-desc">Fresque murale d'automne</div><span class="drag-handle">⠿</span></div>
+            <div class="drop-zone" ondragover="dragOver(event)" ondrop="dropSlot(event)">＋ Déposer une activité ici</div>
+            <button class="add-slot">+</button>
+          </div>
+          <div class="day-col">
+            <div class="day-hdr dh-other">Mardi<div class="dh-date">15 Octobre</div></div>
+            <div class="act-slot" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"><div class="at-time">9:30</div><div class="at-edit">✏️</div><div class="at-name">Éveil Musical 🎵</div><div class="at-desc">Découverte des percussions</div></div>
+            <div class="act-slot" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"><div class="at-time">15:00</div><div class="at-edit">✏️</div><div class="at-name">Lecture contée 📚</div><div class="at-desc">Histoires de la forêt</div><span class="drag-handle">⠿</span></div>
+            <div class="drop-zone" ondragover="dragOver(event)" ondrop="dropSlot(event)">＋ Déposer une activité ici</div>
+            <button class="add-slot">+</button>
+          </div>
+          <div class="day-col">
+            <div class="day-hdr dh-other">Mercredi<div class="dh-date">16 Octobre</div></div>
+            <div class="act-slot" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"><div class="at-time">10:00</div><div class="at-edit">✏️</div><div class="at-name">Cuisine pédagogique 🍳</div><div class="at-desc">Atelier sablés à la cannelle</div></div>
+            <button class="add-slot" style="margin-top:4px">+</button>
+          </div>
+          <div class="day-col">
+            <div class="day-hdr dh-other">Jeudi<div class="dh-date">17 Octobre</div></div>
+            <div class="act-slot" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"><div class="at-time">9:15</div><div class="at-edit">✏️</div><div class="at-name">Sortie Bibliothèque 🏛️</div><div class="at-desc">Bus municipal à 9h00</div></div>
+            <div class="act-slot" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"><div class="at-time">11:00</div><div class="at-edit">✏️</div><div class="at-name">Yoga ludique 🧘</div><div class="at-desc">Postures des animaux</div><span class="drag-handle">⠿</span></div>
+            <div class="drop-zone" ondragover="dragOver(event)" ondrop="dropSlot(event)">＋ Déposer une activité ici</div>
+            <button class="add-slot">+</button>
+          </div>
+          <div class="day-col">
+            <div class="day-hdr dh-other">Vendredi<div class="dh-date">18 Octobre</div></div>
+            <div class="act-slot" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"><div class="at-time">10:30</div><div class="at-edit">✏️</div><div class="at-name">Jeux d'eau 💧</div><div class="at-desc">Transvasement sensoriel</div></div>
+            <div class="act-slot" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"><div class="at-time">15:30</div><div class="at-edit">✏️</div><div class="at-name">Goûter 🎂</div><div class="at-desc">Anniversaire d'Emma</div><span class="drag-handle">⠿</span></div>
+            <div class="drop-zone" ondragover="dragOver(event)" ondrop="dropSlot(event)">＋ Déposer une activité ici</div>
+            <button class="add-slot">+</button>
+          </div>
+        </div>
+        <div class="prog-stats">
+          <div class="ps"><div class="ps-ico psi-p">👥</div><div><div class="ps-lbl">Présence groupe</div><div class="ps-val">12 / 14 Enfants</div></div></div>
+          <div class="ps"><div class="ps-ico psi-t">📋</div><div><div class="ps-lbl">Activités prévues</div><div class="ps-val">8 Total / Semaine</div></div></div>
+          <div class="ps"><div class="ps-ico psi-o">📝</div><div><div class="ps-lbl">Dernière note</div><div class="ps-val">Hier, 16h45</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="add-fab">+</button>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ÉDUCATRICE — CARNET DE DÉVELOPPEMENT
+═══════════════════════════════════════ -->
+<div id="edu-carnet" class="screen">
+  <div class="carnet-layout" style="flex:1">
+    <div class="carnet-sidebar">
+      <div class="cs-portal">Educator Portal</div>
+      <div class="cs-sub">Manage &amp; Track</div>
+      <div class="cs-item" onclick="show('edu-saisie')">⊞ Dashboard</div>
+      <div class="cs-item" onclick="show('edu-saisie')">👦 Children</div>
+      <div class="cs-item" onclick="show('edu-saisie')">📋 Daily Logs</div>
+      <div class="cs-item active">📈 Development</div>
+      <div class="cs-item">💬 Messages</div>
+      <button class="cs-new">New Entry</button>
+      <div class="cs-bot">
+        <div class="cs-bot-item">❓ Help</div>
+        <div class="cs-bot-item" onclick="show('landing')">↩ Logout</div>
+      </div>
+    </div>
+    <div class="carnet-main">
+      <!-- Top bar -->
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;background:#fff;padding:10px 14px;border-radius:10px">
+        <span style="font-size:.8rem;color:#aaa">Bout de Choux</span>
+        <div style="flex:1;display:flex;align-items:center;gap:7px;background:#f5f5f5;border-radius:7px;padding:6px 11px;font-size:.8rem;color:#bbb;max-width:200px">🔍 Rechercher...</div>
+        <span class="topbar-icon">🔔</span><span class="topbar-icon">⚙️</span>
+        <div class="admin-ava">👩</div>
+        <div class="back-lnk" onclick="show('landing')">← Rôles</div>
+      </div>
+      <div class="carnet-hdr">
+        <div class="carnet-child-row">
+          <div class="carnet-ava">🧒<div class="age-bdg">3 ans</div></div>
+          <div>
+            <div class="carnet-cname">Suivi de Victoria Chabot</div>
+            <div class="carnet-csub">Carnet de développement • Session Automne 2023</div>
+          </div>
+        </div>
+        <div class="carnet-acts">
+          <button class="btn btn-outline btn-sm">🖨️ Exporter</button>
+          <button class="btn btn-purple btn-sm">⊞ Enregistrer</button>
+        </div>
+      </div>
+      <div class="dev-grid">
+        <!-- Motricité globale -->
+        <div class="dev-card">
+          <div class="dev-card-h"><div class="dev-ico">🏃</div>Motricité globale</div>
+          <div class="dev-skill"><span class="dev-sname">Marche</span><span class="dev-bdg db-av">En avance</span></div>
+          <div class="dev-skill"><span class="dev-sname">Équilibre</span><span class="dev-bdg db-ac">Acquis</span></div>
+          <div class="dev-skill"><span class="dev-sname">Sauter</span><span class="dev-bdg db-ap">En apprentissage</span></div>
+          <div class="dev-clbl">Commentaires de fin d'étape</div>
+          <div class="dev-cbox">Ex: Victoria montre beaucoup d'assurance dans ses mouvements...</div>
+        </div>
+        <!-- Motricité fine -->
+        <div class="dev-card">
+          <div class="dev-card-h"><div class="dev-ico">✏️</div>Motricité fine</div>
+          <div class="dev-skill"><span class="dev-sname">Tenue du pinceau</span><span class="dev-bdg db-ac">Acquis</span></div>
+          <div class="dev-skill"><span class="dev-sname">Découpage</span><span class="dev-bdg db-ap">En apprentissage</span></div>
+          <div class="dev-clbl">Commentaires de fin d'étape</div>
+          <div class="dev-cbox">S'exerce régulièrement avec les ciseaux en plastique...</div>
+        </div>
+        <!-- Cognitif & Langage -->
+        <div class="dev-card">
+          <div class="dev-card-h"><div class="dev-ico">🧠</div>Cognitif &amp; Langage</div>
+          <div class="dev-skill"><span class="dev-sname">Vocabulaire</span><span class="dev-bdg db-av">En avance</span></div>
+          <div class="dev-skill"><span class="dev-sname">Suivi des consignes</span><span class="dev-bdg db-ac">Acquis</span></div>
+          <div class="dev-clbl">Commentaires de fin d'étape</div>
+          <div class="dev-cbox">Victoria utilise des phrases complexes pour son âge...</div>
+        </div>
+        <!-- Social et affectif -->
+        <div class="dev-card">
+          <div class="dev-card-h"><div class="dev-ico">❤️</div>Social et affectif</div>
+          <div class="dev-skill"><span class="dev-sname">Gestion des émotions</span><span class="dev-bdg db-ap">En apprentissage</span></div>
+          <div class="dev-skill"><span class="dev-sname">Partage</span><span class="dev-bdg db-ac">Acquis</span></div>
+          <div class="dev-clbl">Commentaires de fin d'étape</div>
+          <div class="dev-cbox">Apprend à nommer ses émotions avec l'aide des cartes imagées...</div>
+        </div>
+      </div>
+      <!-- Observations -->
+      <div class="obs-section">
+        <div class="obs-title">Observations récentes</div>
+        <div class="obs-row">
+          <div class="obs-date"><div class="obs-dnum">12</div><div class="obs-dmo">OCT</div></div>
+          <div class="obs-info"><div class="obs-name">Réussite du puzzle 12 pièces</div><div class="obs-desc">Cognitif • Victoria a complété son premier puzzle complexe sans aide.</div></div>
+          <div class="obs-menu">⋯</div>
+        </div>
+        <div class="obs-row">
+          <div class="obs-date"><div class="obs-dnum">08</div><div class="obs-dmo">OCT</div></div>
+          <div class="obs-info"><div class="obs-name">Initiative de partage</div><div class="obs-desc">Social • A spontanément prêté son livre à un autre enfant.</div></div>
+          <div class="obs-menu">⋯</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PARENT — ACCUEIL (Events + Journal)
+═══════════════════════════════════════ -->
+<div id="parent-accueil" class="screen">
+  <div class="ps-layout" style="flex:1">
+    <div class="ps-sidebar">
+      <div class="ps-logo">Bout de Choux</div>
+      <div class="ps-child-card">
+        <div class="pcc-ava">👦</div>
+        <div><div class="pcc-name">Lucas</div><div class="pcc-role">Espace Parent</div></div>
+        <div class="pcc-chev">▾</div>
+      </div>
+      <button class="ps-add-btn mt8">＋ Ajouter un enfant</button>
+      <div class="ps-nav">
+        <div class="ps-nav-item active">⊞ Accueil</div>
+        <div class="ps-nav-item" onclick="show('parent-home')">📋 Fiche journalière</div>
+        <div class="ps-nav-item" onclick="show('parent-programme')">📅 Programme de la semaine</div>
+        <div class="ps-nav-item" onclick="show('parent-absence')">🗓️ Déclarer une absence</div>
+        <div class="ps-nav-item" onclick="show('parent-photos')">🖼️ Galerie photos</div>
+        <div class="ps-nav-item">🧾 Factures</div>
+      </div>
+      <div class="ps-settings">⚙️ Paramètres</div>
+      <div class="back-lnk" onclick="show('landing')" style="padding:8px 18px">← Changer de rôle</div>
+    </div>
+    <div class="ps-main">
+      <div class="ps-topbar">
+        <div style="flex:1;font-size:1.1rem;font-weight:700">Bonjour, famille Lefebvre !</div>
+        <span style="font-size:.8rem;color:#aaa">Mardi 22 octobre 2024</span>
+        <span class="topbar-icon">🔔</span><span class="topbar-icon">👤</span>
+      </div>
+      <div class="ps-content">
+        <!-- Tableau blanc -->
+        <div class="wb-card">
+          <div class="wb-header">
+            <span class="wb-header-title"><span class="wb-dot"></span> Tableau de la garderie</span>
+            <span class="wb-date">Publié le 22 oct. 2024</span>
+          </div>
+          <div class="wb-item">
+            <span class="wb-tag wb-menu">Menu</span>
+            <span class="wb-text">Spaghetti bolognaise, compote de pommes maison. Collation : fromage et crudités.</span>
+          </div>
+          <div class="wb-item">
+            <span class="wb-tag wb-activite">Activité</span>
+            <span class="wb-text">Bricolage thème Halloween toute la journée — venez en costume vendredi si vous le souhaitez !</span>
+          </div>
+          <div class="wb-item">
+            <span class="wb-tag wb-rappel">Rappel</span>
+            <span class="wb-text">Les formulaires de sortie pour la visite bibliothèque doivent être remis avant jeudi matin.</span>
+          </div>
+          <div class="wb-item">
+            <span class="wb-tag wb-annonce">Annonce</span>
+            <span class="wb-text">La garderie sera fermée le 11 novembre — journée de commémoration.</span>
+          </div>
+        </div>
+        <!-- Liens rapides -->
+        <div class="quick-links">
+          <div class="ql" onclick="show('parent-home')">
+            <div class="ql-ico" style="background:#e0f5f0">📋</div>
+            <div><div class="ql-name">Fiche de Lucas</div><div class="ql-sub">Journée du 22 oct.</div></div>
+          </div>
+          <div class="ql" onclick="show('parent-programme')">
+            <div class="ql-ico" style="background:#f0e8ff">📅</div>
+            <div><div class="ql-name">Programme semaine</div><div class="ql-sub">Salle des Abeilles</div></div>
+          </div>
+          <div class="ql" onclick="show('parent-photos')">
+            <div class="ql-ico" style="background:#FFF3D0">🖼️</div>
+            <div><div class="ql-name">Galerie photos</div><div class="ql-sub">8 nouvelles photos</div></div>
+          </div>
+        </div>
+        <!-- Journal de la garderie -->
+        <div class="journal-banner">
+          <div class="jb-deco"></div><div class="jb-deco2"></div>
+          <div class="jb-label">Journal de la garderie</div>
+          <div class="jb-title">Compte-rendu — Fête d'automne</div>
+          <div class="jb-preview">La fête d'automne s'est très bien passée ! Les enfants ont confectionné de magnifiques décorations et participé aux ateliers avec enthousiasme...</div>
+          <button class="jb-btn">Lire la suite →</button>
+        </div>
+        <!-- Événements à venir -->
+        <div class="events-card">
+          <div class="evt-hdr">
+            <span class="evt-hdr-title">Événements à venir</span>
+            <span class="evt-see-all">Voir tout →</span>
+          </div>
+          <div class="evt-item">
+            <div class="evt-date-box"><div class="edb-day">25</div><div class="edb-month">OCT</div></div>
+            <div>
+              <div class="evt-info-title">Fête d'Halloween — Défilé de costumes</div>
+              <div class="evt-info-desc">Les enfants sont invités à venir déguisés. Défilé à 10h dans la cour. Friandises offertes par la garderie.</div>
+              <span class="evt-tag">Activité</span>
+            </div>
+          </div>
+          <div class="evt-item">
+            <div class="evt-date-box"><div class="edb-day">02</div><div class="edb-month">NOV</div></div>
+            <div>
+              <div class="evt-info-title">Atelier bricolage parents-enfants</div>
+              <div class="evt-info-desc">Venez créer avec vos enfants ! Inscription requise avant le 29 oct. via le formulaire joint.</div>
+              <span class="evt-tag">Famille</span>
+            </div>
+          </div>
+          <div class="evt-item">
+            <div class="evt-date-box"><div class="edb-day">15</div><div class="edb-month">NOV</div></div>
+            <div>
+              <div class="evt-info-title">Réunion parents-éducateurs</div>
+              <div class="evt-info-desc">Présentation du bilan du trimestre et du programme de décembre. 18h30 — Salle polyvalente.</div>
+              <span class="evt-tag">Réunion</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PARENT — PROGRAMME DE LA SEMAINE
+═══════════════════════════════════════ -->
+<div id="parent-programme" class="screen">
+  <div class="ps-layout" style="flex:1">
+    <div class="ps-sidebar">
+      <div class="ps-logo">Bout de Choux</div>
+      <div class="ps-child-card">
+        <div class="pcc-ava">👦</div>
+        <div><div class="pcc-name">Lucas</div><div class="pcc-role">Espace Parent</div></div>
+        <div class="pcc-chev">▾</div>
+      </div>
+      <div class="ps-nav">
+        <div class="ps-nav-item" onclick="show('parent-accueil')">⊞ Accueil</div>
+        <div class="ps-nav-item" onclick="show('parent-home')">📋 Fiche journalière</div>
+        <div class="ps-nav-item active">📅 Programme de la semaine</div>
+        <div class="ps-nav-item" onclick="show('parent-absence')">🗓️ Déclarer une absence</div>
+        <div class="ps-nav-item" onclick="show('parent-photos')">🖼️ Galerie photos</div>
+      </div>
+      <div class="ps-settings">⚙️ Paramètres</div>
+      <div class="back-lnk" onclick="show('landing')" style="padding:8px 18px">← Changer de rôle</div>
+    </div>
+    <div class="ps-main">
+      <div class="ps-topbar"><div style="flex:1;font-weight:700;font-size:1.1rem">Programme de la semaine</div><span class="topbar-icon">🔔</span></div>
+      <div class="ps-content">
+        <!-- Room tabs -->
+        <div class="room-tabs">
+          <div class="room-tab active">Abeilles — Lucas</div>
+          <div class="room-tab">Papillons — Céline</div>
+          <div class="room-tab">Coccinelles — Stéphane</div>
+        </div>
+        <!-- Week nav -->
+        <div class="week-nav-bar" style="margin-bottom:16px">
+          <button class="wnb-btn">‹ Semaine précédente</button>
+          <div class="wnb-center">
+            <div class="wnb-label">Semaine 14 — 18 Octobre</div>
+            <div class="wnb-range">Salle des Abeilles · 3-4 ans</div>
+          </div>
+          <button class="wnb-btn">Semaine suivante ›</button>
+        </div>
+        <!-- Read-only weekly grid -->
+        <div class="week-cols">
+          <div class="day-col">
+            <div class="day-hdr dh-today">Lundi<div class="dh-date">14 Octobre</div></div>
+            <div class="act-slot" style="cursor:default"><div class="at-time">9h30</div><div class="at-name">Jeux extérieurs</div><div class="at-desc">Parc — Motricité globale</div></div>
+            <div class="act-slot" style="cursor:default"><div class="at-time">10h30</div><div class="at-name">Bricolage automne</div><div class="at-desc">Fresque murale</div></div>
+          </div>
+          <div class="day-col">
+            <div class="day-hdr dh-other">Mardi<div class="dh-date">15 Octobre</div></div>
+            <div class="act-slot" style="cursor:default"><div class="at-time">9h30</div><div class="at-name">Éveil musical</div><div class="at-desc">Percussions</div></div>
+            <div class="act-slot" style="cursor:default"><div class="at-time">15h00</div><div class="at-name">Lecture contée</div><div class="at-desc">Histoires de la forêt</div></div>
+          </div>
+          <div class="day-col">
+            <div class="day-hdr dh-other">Mercredi<div class="dh-date">16 Octobre</div></div>
+            <div class="act-slot" style="cursor:default"><div class="at-time">10h00</div><div class="at-name">Cuisine pédagogique</div><div class="at-desc">Sablés cannelle</div></div>
+          </div>
+          <div class="day-col">
+            <div class="day-hdr dh-other">Jeudi<div class="dh-date">17 Octobre</div></div>
+            <div class="act-slot" style="cursor:default"><div class="at-time">9h15</div><div class="at-name">Sortie bibliothèque</div><div class="at-desc">Bus municipal</div></div>
+            <div class="act-slot" style="cursor:default"><div class="at-time">11h00</div><div class="at-name">Yoga ludique</div><div class="at-desc">Postures animaux</div></div>
+          </div>
+          <div class="day-col">
+            <div class="day-hdr dh-other">Vendredi<div class="dh-date">18 Octobre</div></div>
+            <div class="act-slot" style="cursor:default"><div class="at-time">10h30</div><div class="at-name">Jeux d'eau</div><div class="at-desc">Transvasement sensoriel</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ÉDUCATRICE — PRÉSENCES
+═══════════════════════════════════════ -->
+<div id="edu-presences" class="screen">
+  <div class="edu-layout" style="flex:1">
+    <div class="edu-topnav">
+      <div class="edu-logo">Bout de Choux</div>
+      <div class="edu-tnav" onclick="show('edu-saisie')">Saisie journalière</div>
+      <div class="edu-tnav active">Présences</div>
+      <div class="edu-tnav" onclick="show('edu-programme')">Programme</div>
+      <div class="edu-tnav-right">
+        <span class="topbar-icon">🔔</span>
+        <div class="admin-ava">👩</div>
+        <div class="back-lnk" onclick="show('landing')">← Rôles</div>
+      </div>
+    </div>
+    <div class="edu-subtabs">
+      <div class="est" onclick="show('edu-saisie')">Saisie journalière</div>
+      <div class="est act-t">Présences</div>
+      <div class="est" onclick="show('edu-programme')">Programme</div>
+      <div class="est">Rapport d'incident</div>
+    </div>
+    <div style="flex:1;padding:20px 24px;overflow-y:auto;background:#f5f7f8">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
+        <div>
+          <div style="font-size:1.2rem;font-weight:700">Registre des Présences</div>
+          <div style="font-size:.8rem;color:#aaa;margin-top:2px">Mardi 22 octobre 2024 — Classroom A</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm">⬇ Exporter</button>
+          <button class="btn btn-teal btn-sm">Tout marquer arrivés</button>
+        </div>
+      </div>
+      <!-- KPIs -->
+      <div class="pres-grid">
+        <div class="pres-kpi"><div class="pres-kpi-lbl">Inscrits</div><div class="pres-kpi-val">14</div><div class="pres-kpi-sub">enfants</div></div>
+        <div class="pres-kpi"><div class="pres-kpi-lbl">Présents</div><div class="pres-kpi-val" style="color:#1a7a1a">11</div><div class="pres-kpi-sub">↑ 2 depuis 9h</div></div>
+        <div class="pres-kpi"><div class="pres-kpi-lbl">Absents</div><div class="pres-kpi-val" style="color:#c00">2</div><div class="pres-kpi-sub">dont 1 justifié</div></div>
+        <div class="pres-kpi"><div class="pres-kpi-lbl">En attente</div><div class="pres-kpi-val" style="color:#888">1</div><div class="pres-kpi-sub">arrivée prévue 9h30</div></div>
+      </div>
+      <!-- Enfants -->
+      <div class="pres-section">
+        <div class="pres-sec-hdr">
+          <span class="pres-sec-title">Enfants — Classroom A</span>
+          <input style="border:1.5px solid #e5e5e5;border-radius:8px;padding:7px 12px;font-size:.8rem;width:180px;font-family:inherit" placeholder="Chercher un enfant...">
+        </div>
+        <div class="pres-hdr pres-cols-children">
+          <div>Enfant</div><div>Heure prévue</div><div>Arrivée</div><div>Départ</div><div>Statut</div><div>Actions</div>
+        </div>
+        <div class="pres-row pres-cols-children">
+          <div><div class="pr-name">Abraham Koffi</div><div class="pr-room">Abeilles</div></div>
+          <div style="font-size:.82rem;color:#888">8h30</div>
+          <div><input class="pres-time" value="8h32" type="text"></div>
+          <div><input class="pres-time" placeholder="--:--" type="text"></div>
+          <div><span class="pres-status ps-present">Présent</span></div>
+          <div style="display:flex;gap:5px"><button class="chk-btn chk-out">Départ</button><button class="chk-btn chk-abs">Abs.</button></div>
+        </div>
+        <div class="pres-row pres-cols-children">
+          <div><div class="pr-name">Léa Tremblay</div><div class="pr-room">Abeilles</div></div>
+          <div style="font-size:.82rem;color:#888">9h00</div>
+          <div><input class="pres-time" placeholder="--:--" type="text"></div>
+          <div><input class="pres-time" placeholder="--:--" type="text"></div>
+          <div><span class="pres-status ps-pending">En attente</span></div>
+          <div style="display:flex;gap:5px"><button class="chk-btn chk-in">Arrivée</button><button class="chk-btn chk-abs">Abs.</button></div>
+        </div>
+        <div class="pres-row pres-cols-children">
+          <div><div class="pr-name">Noah Bergeron</div><div class="pr-room">Abeilles</div></div>
+          <div style="font-size:.82rem;color:#888">8h00</div>
+          <div><input class="pres-time" value="8h05" type="text"></div>
+          <div><input class="pres-time" placeholder="--:--" type="text"></div>
+          <div><span class="pres-status ps-present">Présent</span></div>
+          <div style="display:flex;gap:5px"><button class="chk-btn chk-out">Départ</button><button class="chk-btn chk-abs">Abs.</button></div>
+        </div>
+        <div class="pres-row pres-cols-children">
+          <div><div class="pr-name">Emma Gauthier</div><div class="pr-room">Abeilles</div></div>
+          <div style="font-size:.82rem;color:#888">8h30</div>
+          <div><input class="pres-time" value="—" type="text" disabled style="color:#c00;background:#fff5f5"></div>
+          <div><input class="pres-time" value="—" type="text" disabled style="color:#c00;background:#fff5f5"></div>
+          <div><span class="pres-status ps-absent">Absente</span></div>
+          <div><span style="font-size:.72rem;color:#aaa">Déclaré par parent</span></div>
+        </div>
+      </div>
+      <!-- Éducatrices -->
+      <div class="pres-section">
+        <div class="pres-sec-hdr">
+          <span class="pres-sec-title">Éducatrices — Personnel</span>
+          <span style="font-size:.78rem;color:#aaa">2 / 3 présentes</span>
+        </div>
+        <div class="pres-hdr pres-cols-staff">
+          <div>Éducatrice</div><div>Heure prévue</div><div>Arrivée</div><div>Départ</div><div>Actions</div>
+        </div>
+        <div class="pres-row pres-cols-staff">
+          <div><div class="pr-name">Julie Tremblay</div><div class="pr-room">Responsable Classroom A</div></div>
+          <div style="font-size:.82rem;color:#888">9h00</div>
+          <div><input class="pres-time edu-focus" value="8h58" type="text"></div>
+          <div><input class="pres-time edu-focus" placeholder="--:--" type="text"></div>
+          <div style="display:flex;gap:5px"><button class="chk-btn chk-out" style="background:#f0e8ff;color:#7C3AED">Fin de service</button></div>
+        </div>
+        <div class="pres-row pres-cols-staff">
+          <div><div class="pr-name">Élodie Roy</div><div class="pr-room">Éducatrice — Abeilles</div></div>
+          <div style="font-size:.82rem;color:#888">8h00</div>
+          <div><input class="pres-time edu-focus" value="8h02" type="text"></div>
+          <div><input class="pres-time edu-focus" placeholder="--:--" type="text"></div>
+          <div style="display:flex;gap:5px"><button class="chk-btn chk-out" style="background:#f0e8ff;color:#7C3AED">Fin de service</button></div>
+        </div>
+        <div class="pres-row pres-cols-staff">
+          <div><div class="pr-name">Marie Côté</div><div class="pr-room">Éducatrice — Remplacement</div></div>
+          <div style="font-size:.82rem;color:#888">10h00</div>
+          <div><input class="pres-time edu-focus" placeholder="--:--" type="text"></div>
+          <div><input class="pres-time edu-focus" placeholder="--:--" type="text"></div>
+          <div style="display:flex;gap:5px"><button class="chk-btn chk-in" style="background:#f0e8ff;color:#7C3AED">Arrivée</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ADMIN — AFFECTATIONS
+═══════════════════════════════════════ -->
+<div id="admin-affectations" class="screen">
+  <div class="admin-layout" style="flex:1">
+    <div class="admin-topnav">
+      <div class="admin-logo" onclick="show('landing')">Bout de Choux</div>
+      <div class="admin-nav-item" onclick="show('admin-locaux')">Locaux</div>
+      <div class="admin-nav-item" onclick="show('admin-horaires')">Enfants</div>
+      <div class="admin-nav-item active">Affectations</div>
+      <div class="admin-nav-item">Messages</div>
+      <div class="admin-nav-item" onclick="show('admin-rapports')">Rapports</div>
+      <div class="admin-nav-item" onclick="show('admin-programmes')">Programmes</div>
+      <div class="admin-nav-item" onclick="show('admin-tableau')">Tableau blanc</div>
+      <div class="admin-nav-right">
+        <span class="topbar-icon">🔔</span><span class="topbar-icon">⚙️</span>
+        <div class="admin-ava">👩</div>
+      </div>
+    </div>
+    <div class="admin-content">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Gestion des Affectations</div>
+          <div class="page-sub">Glissez-déposez les éducatrices dans les salles pour ajuster les affectations.</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm">⬇ Exporter</button>
+          <button class="btn btn-orange" style="border-radius:9px;padding:10px 18px">✔ Valider les affectations</button>
+        </div>
+      </div>
+      <div class="affec-body">
+        <!-- Staff pool -->
+        <div class="staff-pool">
+          <div class="sp-title">Personnel disponible <span class="sp-count">6 éducatrices</span></div>
+          <div class="sp-item sp-avail" draggable="true">
+            <div class="sp-avail-dot dot-green"></div>
+            <div class="sp-ava">👩</div>
+            <div><div class="sp-info-name">Clara Dubois</div><div class="sp-info-cert">CPE certifiée</div></div>
+            <div class="sp-drag">⠿</div>
+          </div>
+          <div class="sp-item sp-avail" draggable="true">
+            <div class="sp-avail-dot dot-green"></div>
+            <div class="sp-ava">👩</div>
+            <div><div class="sp-info-name">Marie Lefebvre</div><div class="sp-info-cert">CPE certifiée</div></div>
+            <div class="sp-drag">⠿</div>
+          </div>
+          <div class="sp-item sp-avail" draggable="true">
+            <div class="sp-avail-dot dot-green"></div>
+            <div class="sp-ava">👩</div>
+            <div><div class="sp-info-name">Marie Côté</div><div class="sp-info-cert">Remplaçante</div></div>
+            <div class="sp-drag">⠿</div>
+          </div>
+          <div class="sp-item sp-assigned">
+            <div class="sp-avail-dot dot-grey"></div>
+            <div class="sp-ava">👩</div>
+            <div><div class="sp-info-name">Sarah Bernier</div><div class="sp-info-cert">Affectée</div></div>
+          </div>
+          <div class="sp-item sp-assigned">
+            <div class="sp-avail-dot dot-grey"></div>
+            <div class="sp-ava">👩</div>
+            <div><div class="sp-info-name">Julie Tremblay</div><div class="sp-info-cert">Affectée</div></div>
+          </div>
+          <div class="sp-item sp-assigned">
+            <div class="sp-avail-dot dot-grey"></div>
+            <div class="sp-ava">👩</div>
+            <div><div class="sp-info-name">Élodie Roy</div><div class="sp-info-cert">Affectée</div></div>
+          </div>
+        </div>
+        <!-- Room assignment cards -->
+        <div class="rooms-assign">
+          <div class="ra-card">
+            <div class="ra-card-top">
+              <div><div class="ra-room-name">Papillons</div><div class="ra-room-age">0–18 mois</div></div>
+              <span class="ra-ratio ra-ratio-ok">1:4 ✓</span>
+            </div>
+            <div class="ra-slot filled">
+              <div class="ra-slot-ava">👩</div>
+              <div><div class="ra-slot-name">Clara Dubois</div><div class="ra-slot-hours">8h00 – 16h00</div></div>
+              <button class="ra-remove">✕</button>
+            </div>
+            <div class="ra-slot filled">
+              <div class="ra-slot-ava">👩</div>
+              <div><div class="ra-slot-name">Marie Lefebvre</div><div class="ra-slot-hours">8h30 – 16h30</div></div>
+              <button class="ra-remove">✕</button>
+            </div>
+            <button class="ra-add-btn">＋ Ajouter une éducatrice</button>
+            <div class="ra-children-count">8 enfants inscrits · Ratio légal : 1:5</div>
+          </div>
+          <div class="ra-card" style="border:1.5px solid #ffe0d0">
+            <div class="ra-card-top">
+              <div><div class="ra-room-name">Coccinelles</div><div class="ra-room-age">18–36 mois</div></div>
+              <span class="ra-ratio ra-ratio-warn">1:16 ⚠</span>
+            </div>
+            <div class="ra-slot filled">
+              <div class="ra-slot-ava">👩</div>
+              <div><div class="ra-slot-name">Sarah Bernier</div><div class="ra-slot-hours">7h30 – 15h30</div></div>
+              <button class="ra-remove">✕</button>
+            </div>
+            <div class="ra-slot" style="border:2px dashed #ffc0a0">
+              <div style="font-size:.78rem;color:#f0a000;font-weight:600;width:100%;text-align:center">⚠ Poste à pourvoir — Renfort requis</div>
+            </div>
+            <button class="ra-add-btn" style="border-color:#C85A00;color:#C85A00">＋ Affecter un renfort urgant</button>
+            <div class="ra-children-count">16 enfants inscrits · Ratio légal : 1:8</div>
+          </div>
+          <div class="ra-card">
+            <div class="ra-card-top">
+              <div><div class="ra-room-name">Abeilles</div><div class="ra-room-age">3–4 ans</div></div>
+              <span class="ra-ratio ra-ratio-ok">1:10 ✓</span>
+            </div>
+            <div class="ra-slot filled">
+              <div class="ra-slot-ava">👩</div>
+              <div><div class="ra-slot-name">Julie Tremblay</div><div class="ra-slot-hours">9h00 – 17h00</div></div>
+              <button class="ra-remove">✕</button>
+            </div>
+            <div class="ra-slot filled">
+              <div class="ra-slot-ava">👩</div>
+              <div><div class="ra-slot-name">Élodie Roy</div><div class="ra-slot-hours">8h00 – 16h00</div></div>
+              <button class="ra-remove">✕</button>
+            </div>
+            <button class="ra-add-btn">＋ Ajouter une éducatrice</button>
+            <div class="ra-children-count">20 enfants inscrits · Ratio légal : 1:10</div>
+          </div>
+          <div class="ra-card">
+            <div class="ra-card-top">
+              <div><div class="ra-room-name">Libellules</div><div class="ra-room-age">4–5 ans</div></div>
+              <span class="ra-ratio ra-ratio-ok">1:12 ✓</span>
+            </div>
+            <div class="ra-slot filled">
+              <div class="ra-slot-ava">👨</div>
+              <div><div class="ra-slot-name">Thomas Gagnon</div><div class="ra-slot-hours">8h30 – 16h30</div></div>
+              <button class="ra-remove">✕</button>
+            </div>
+            <button class="ra-add-btn">＋ Ajouter une éducatrice</button>
+            <div class="ra-children-count">12 enfants inscrits · Ratio légal : 1:10</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ADMIN — PROGRAMMES DES SALLES
+═══════════════════════════════════════ -->
+<div id="admin-programmes" class="screen">
+  <div class="admin-layout" style="flex:1">
+    <div class="admin-topnav">
+      <div class="admin-logo" onclick="show('landing')">Bout de Choux</div>
+      <div class="admin-nav-item" onclick="show('admin-locaux')">Locaux</div>
+      <div class="admin-nav-item" onclick="show('admin-horaires')">Enfants</div>
+      <div class="admin-nav-item" onclick="show('admin-affectations')">Affectations</div>
+      <div class="admin-nav-item">Messages</div>
+      <div class="admin-nav-item" onclick="show('admin-rapports')">Rapports</div>
+      <div class="admin-nav-item active">Programmes</div>
+      <div class="admin-nav-right">
+        <span class="topbar-icon">🔔</span><span class="topbar-icon">⚙️</span>
+        <div class="admin-ava">👩</div>
+      </div>
+    </div>
+    <div class="admin-content">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Programmes des salles</div>
+          <div class="page-sub">Vue d'ensemble hebdomadaire de toutes les salles.</div>
+        </div>
+        <button class="btn btn-orange" style="border-radius:9px;padding:10px 18px">🖨️ Imprimer tous les programmes</button>
+      </div>
+      <!-- Room selector -->
+      <div class="prog-room-tabs">
+        <div class="prt active">Papillons — 0-18 mois</div>
+        <div class="prt">Coccinelles — 18-36 mois</div>
+        <div class="prt">Abeilles — 3-4 ans</div>
+        <div class="prt">Libellules — 4-5 ans</div>
+      </div>
+      <!-- Week nav -->
+      <div class="week-nav-bar">
+        <button class="wnb-btn">‹ Précédente</button>
+        <div class="wnb-center">
+          <div class="wnb-label">Semaine 14 — 18 Octobre</div>
+          <div class="wnb-range">Papillons · 0-18 mois · Responsable : Clara Dubois</div>
+        </div>
+        <button class="wnb-btn">Suivante ›</button>
+      </div>
+      <!-- Read-only week grid (admin view) -->
+      <div class="week-cols">
+        <div class="day-col">
+          <div class="day-hdr dh-other">Lundi<div class="dh-date">14 Octobre</div></div>
+          <div class="act-slot" style="cursor:default"><div class="at-time">9h00</div><div class="at-name">Éveil sensoriel</div><div class="at-desc">Bacs de sable fin</div></div>
+          <div class="act-slot" style="cursor:default"><div class="at-time">10h30</div><div class="at-name">Bain de couleurs</div><div class="at-desc">Peinture aux doigts</div></div>
+        </div>
+        <div class="day-col">
+          <div class="day-hdr dh-other">Mardi<div class="dh-date">15 Octobre</div></div>
+          <div class="act-slot" style="cursor:default"><div class="at-time">9h30</div><div class="at-name">Musique douce</div><div class="at-desc">Berceuses et rythmes</div></div>
+        </div>
+        <div class="day-col">
+          <div class="day-hdr dh-other">Mercredi<div class="dh-date">16 Octobre</div></div>
+          <div class="act-slot" style="cursor:default"><div class="at-time">10h00</div><div class="at-name">Jeux d'eau</div><div class="at-desc">Bac aquatique sécurisé</div></div>
+        </div>
+        <div class="day-col">
+          <div class="day-hdr dh-other">Jeudi<div class="dh-date">17 Octobre</div></div>
+          <div class="act-slot" style="cursor:default"><div class="at-time">9h15</div><div class="at-name">Tapis d'éveil</div><div class="at-desc">Motricité fine</div></div>
+        </div>
+        <div class="day-col">
+          <div class="day-hdr dh-other">Vendredi<div class="dh-date">18 Octobre</div></div>
+          <div class="act-slot" style="cursor:default"><div class="at-time">10h30</div><div class="at-name">Lecture imagier</div><div class="at-desc">Albums sonores</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ─── COPY WEEK MODAL (floating overlay) ─── -->
+<div id="copy-week-modal" class="modal-overlay" onclick="if(event.target===this)closeCopyModal()">
+  <div class="modal-box">
+    <div class="modal-title">📋 Copier une semaine précédente</div>
+    <div class="modal-sub">Sélectionnez une semaine — ses activités seront importées dans la semaine actuelle.</div>
+    <div id="copy-week-list">
+      <div class="copy-week-item" onclick="applyWeekCopy('S42','14–18 Octobre')">
+        <div class="cwi-left">
+          <div class="cwi-icon">📅</div>
+          <div><div class="cwi-label">Semaine 42</div><div class="cwi-range">14 au 18 Octobre 2024</div></div>
+        </div>
+        <span class="cwi-count">8 activités</span>
+      </div>
+      <div class="copy-week-item" onclick="applyWeekCopy('S41','7–11 Octobre')">
+        <div class="cwi-left">
+          <div class="cwi-icon">📅</div>
+          <div><div class="cwi-label">Semaine 41</div><div class="cwi-range">7 au 11 Octobre 2024</div></div>
+        </div>
+        <span class="cwi-count">10 activités</span>
+      </div>
+      <div class="copy-week-item" onclick="applyWeekCopy('S40','30 Sept.–4 Oct.')">
+        <div class="cwi-left">
+          <div class="cwi-icon">📅</div>
+          <div><div class="cwi-label">Semaine 40</div><div class="cwi-range">30 Sept. au 4 Oct. 2024</div></div>
+        </div>
+        <span class="cwi-count">9 activités</span>
+      </div>
+      <div class="copy-week-item" onclick="applyWeekCopy('S39','23–27 Septembre')">
+        <div class="cwi-left">
+          <div class="cwi-icon">📅</div>
+          <div><div class="cwi-label">Semaine 39</div><div class="cwi-range">23 au 27 Septembre 2024</div></div>
+        </div>
+        <span class="cwi-count">11 activités</span>
+      </div>
+      <div class="copy-week-item" onclick="applyWeekCopy('S38','16–20 Septembre')">
+        <div class="cwi-left">
+          <div class="cwi-icon">📅</div>
+          <div><div class="cwi-label">Semaine 38</div><div class="cwi-range">16 au 20 Septembre 2024</div></div>
+        </div>
+        <span class="cwi-count">7 activités</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-cancel" onclick="closeCopyModal()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- Copy success toast -->
+<div id="copy-toast" class="copy-toast">✓ Programme importé — vous pouvez ajuster les activités</div>
+
+<!-- ═══════════════════════════════════════
+     ADMIN — TABLEAU BLANC
+═══════════════════════════════════════ -->
+<div id="admin-tableau" class="screen">
+  <div class="admin-layout" style="flex:1">
+    <div class="admin-topnav">
+      <div class="admin-logo" onclick="show('landing')">Bout de Choux</div>
+      <div class="admin-nav-item" onclick="show('admin-locaux')">Locaux</div>
+      <div class="admin-nav-item" onclick="show('admin-horaires')">Enfants</div>
+      <div class="admin-nav-item" onclick="show('admin-affectations')">Affectations</div>
+      <div class="admin-nav-item">Messages</div>
+      <div class="admin-nav-item" onclick="show('admin-rapports')">Rapports</div>
+      <div class="admin-nav-item" onclick="show('admin-programmes')">Programmes</div>
+      <div class="admin-nav-item active">Tableau blanc</div>
+      <div class="admin-nav-right">
+        <span class="topbar-icon">🔔</span><span class="topbar-icon">⚙️</span>
+        <div class="admin-ava">👩</div>
+      </div>
+    </div>
+    <div class="admin-content">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Tableau blanc — Espace parent</div>
+          <div class="page-sub">Ce que vous publiez ici s'affiche sur la page d'accueil des familles en temps réel.</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm">Brouillon</button>
+          <button class="btn btn-orange" style="border-radius:9px;padding:10px 20px" onclick="publishTableau()">✔ Publier sur l'espace parent</button>
+        </div>
+      </div>
+      <div class="tableau-layout">
+        <!-- Left: form -->
+        <div>
+          <div class="tbl-form">
+            <div class="tbl-form-title">Nouveau message</div>
+            <!-- Type -->
+            <div class="tbl-field">
+              <label class="tbl-label">Type de message</label>
+              <div class="tbl-type-pills">
+                <div class="tbl-pill menu-pill active-pill" onclick="selectType(this,'menu')">Menu du jour</div>
+                <div class="tbl-pill activite-pill" onclick="selectType(this,'activite')">Activité</div>
+                <div class="tbl-pill rappel-pill" onclick="selectType(this,'rappel')">Rappel</div>
+                <div class="tbl-pill" onclick="selectType(this,'annonce')" style="--active:#C85A00">Annonce</div>
+                <div class="tbl-pill" onclick="selectType(this,'evenement')" style="--active:#7C3AED">Événement</div>
+              </div>
+            </div>
+            <!-- Room -->
+            <div class="tbl-field">
+              <label class="tbl-label">Destinataires</label>
+              <select class="tbl-select">
+                <option>Toutes les familles</option>
+                <option>Papillons (0-18 mois)</option>
+                <option>Coccinelles (18-36 mois)</option>
+                <option>Abeilles (3-4 ans)</option>
+                <option>Libellules (4-5 ans)</option>
+              </select>
+            </div>
+            <!-- Titre -->
+            <div class="tbl-field">
+              <label class="tbl-label">Titre (optionnel)</label>
+              <input class="tbl-input" id="tbl-titre" placeholder="Ex: Menu de la semaine" oninput="updatePreview()">
+            </div>
+            <!-- Content -->
+            <div class="tbl-field">
+              <label class="tbl-label">Contenu du message</label>
+              <textarea class="tbl-textarea" id="tbl-content" placeholder="Rédigez votre message ici..." oninput="updatePreview()">Spaghetti bolognaise, compote de pommes maison. Collation : fromage et crudités.</textarea>
+            </div>
+            <!-- Dates -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div class="tbl-field" style="margin-bottom:0">
+                <label class="tbl-label">Date de publication</label>
+                <input class="tbl-input" type="date" value="2024-10-22">
+              </div>
+              <div class="tbl-field" style="margin-bottom:0">
+                <label class="tbl-label">Expiration</label>
+                <input class="tbl-input" type="date" value="2024-10-22">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Right: preview -->
+        <div class="tbl-preview">
+          <div class="tbl-prev-title">Aperçu — vue parent</div>
+          <div style="background:#f5f7f8;border-radius:10px;padding:14px;margin-bottom:14px">
+            <div style="font-size:.68rem;color:#aaa;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.07em">Tableau de la garderie</div>
+            <div class="tbl-prev-card">
+              <div class="tbl-prev-hdr"><span id="prev-dot" style="width:7px;height:7px;border-radius:50%;background:#1a7a6d;display:inline-block"></span> Message de la direction</div>
+              <div class="tbl-prev-body">
+                <div class="tbl-prev-tag wb-menu" id="prev-tag">Menu</div>
+                <div class="tbl-prev-text" id="prev-text">Spaghetti bolognaise, compote de pommes maison. Collation : fromage et crudités.</div>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:.73rem;color:#bbb;line-height:1.6;text-align:center">Le message apparaîtra<br>sur le tableau blanc des parents.</div>
+        </div>
+      </div>
+
+      <!-- Published messages list -->
+      <div class="tbl-list">
+        <div class="tbl-list-hdr">
+          <span>Messages publiés</span>
+          <button class="btn btn-outline btn-sm">⊞ Filtrer</button>
+        </div>
+        <div class="tbl-list-hdr-row">
+          <div>Message</div><div>Type</div><div>Destinataires</div><div>Expiration</div><div>Statut</div>
+        </div>
+        <div class="tbl-list-row">
+          <div><div style="font-weight:600;font-size:.87rem">Menu du jour</div><div style="font-size:.7rem;color:#aaa">Spaghetti bolognaise...</div></div>
+          <div><span class="wb-tag wb-menu" style="font-size:.65rem">Menu</span></div>
+          <div style="font-size:.82rem">Toutes les familles</div>
+          <div style="font-size:.82rem;color:#888">22 oct. 2024</div>
+          <div><span class="pub-badge pub-active">Actif</span></div>
+        </div>
+        <div class="tbl-list-row">
+          <div><div style="font-weight:600;font-size:.87rem">Bricolage Halloween</div><div style="font-size:.7rem;color:#aaa">Venez en costume vendredi</div></div>
+          <div><span class="wb-tag wb-activite" style="font-size:.65rem">Activité</span></div>
+          <div style="font-size:.82rem">Toutes les familles</div>
+          <div style="font-size:.82rem;color:#888">25 oct. 2024</div>
+          <div><span class="pub-badge pub-active">Actif</span></div>
+        </div>
+        <div class="tbl-list-row">
+          <div><div style="font-weight:600;font-size:.87rem">Formulaires sortie biblio</div><div style="font-size:.7rem;color:#aaa">À remettre avant jeudi</div></div>
+          <div><span class="wb-tag wb-rappel" style="font-size:.65rem">Rappel</span></div>
+          <div style="font-size:.82rem">Toutes les familles</div>
+          <div style="font-size:.82rem;color:#888">24 oct. 2024</div>
+          <div><span class="pub-badge pub-active">Actif</span></div>
+        </div>
+        <div class="tbl-list-row">
+          <div><div style="font-weight:600;font-size:.87rem">Fermeture 11 novembre</div><div style="font-size:.7rem;color:#aaa">Journée de commémoration</div></div>
+          <div><span class="wb-tag wb-annonce" style="font-size:.65rem">Annonce</span></div>
+          <div style="font-size:.82rem">Toutes les familles</div>
+          <div style="font-size:.82rem;color:#888">10 nov. 2024</div>
+          <div><span class="pub-badge pub-active">Actif</span></div>
+        </div>
+        <div class="tbl-list-row">
+          <div><div style="font-weight:600;font-size:.87rem">Menu semaine 41</div><div style="font-size:.7rem;color:#aaa">Poulet rôti, légumes vapeur...</div></div>
+          <div><span class="wb-tag wb-menu" style="font-size:.65rem">Menu</span></div>
+          <div style="font-size:.82rem">Toutes les familles</div>
+          <div style="font-size:.82rem;color:#aaa">18 oct. 2024</div>
+          <div><span class="pub-badge pub-expired">Expiré</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Navigation history stack
+var navStack = [];
+
+// Portal colors for the back pill
+var portalColors = {
+  'login-parent': '#2A9D8F',
+  'login-edu':    '#7C3AED',
+  'login-admin':  '#C85A00',
+  'parent-home':     '#2A9D8F',
+  'parent-absence':  '#2A9D8F',
+  'parent-photos':   '#2A9D8F',
+  'admin-locaux':       '#C85A00',
+  'admin-horaires':     '#C85A00',
+  'admin-inscriptions': '#C85A00',
+  'admin-rapports':     '#C85A00',
+  'edu-saisie':    '#7C3AED',
+  'edu-programme': '#7C3AED',
+  'edu-carnet':    '#7C3AED'
+};
+
+function show(id, pushHistory) {
+  // Hide all screens using only class toggling
+  document.querySelectorAll('.screen').forEach(function(s) {
+    s.classList.remove('visible');
+  });
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('visible');
+  window.scrollTo(0, 0);
+
+  // Manage history stack
+  if (pushHistory !== false) {
+    var prev = navStack[navStack.length - 1];
+    if (prev !== id) navStack.push(id);
+  }
+
+  // Update the global back pill
+  updatePill(id);
+}
+
+function goBack() {
+  if (navStack.length > 1) {
+    navStack.pop(); // remove current
+    var prev = navStack[navStack.length - 1];
+    show(prev, false);
+  }
+}
+
+function updatePill(currentId) {
+  var pill = document.getElementById('global-back');
+  var dot  = document.getElementById('pill-dot');
+  var lbl  = document.getElementById('pill-label');
+
+  if (currentId === 'landing' || navStack.length <= 1) {
+    pill.style.display = 'none';
+    return;
+  }
+
+  // Determine back destination label
+  var prev = navStack[navStack.length - 2] || 'landing';
+  var labels = {
+    'landing':            'Accueil',
+    'login-parent':       'Connexion Parent',
+    'login-edu':          'Connexion Éducatrice',
+    'login-admin':        'Connexion Direction',
+    'parent-home':        'Espace Parent',
+    'parent-absence':     'Activités',
+    'parent-photos':      'Galerie',
+    'admin-locaux':       'Locaux',
+    'admin-horaires':     'Horaires',
+    'admin-inscriptions': 'Inscriptions',
+    'admin-rapports':     'Rapports',
+    'edu-saisie':         'Saisie',
+    'edu-programme':      'Programme',
+    'edu-carnet':         'Carnet'
+  };
+  lbl.textContent = '← ' + (labels[prev] || 'Retour');
+  var color = portalColors[prev] || portalColors[currentId] || '#555';
+  dot.style.background = color;
+  pill.style.display = 'flex';
+}
+
+// Init: show landing with no history
+show('landing', false);
+navStack = ['landing'];
+
+// ── Copy week modal ──────────────────────
+function openCopyModal() {
+  document.getElementById('copy-week-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCopyModal() {
+  document.getElementById('copy-week-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+var weekActivities = {
+  'S42': [
+    {day:0, time:'9h30', name:'Jeux extérieurs', desc:'Parc — Motricité globale'},
+    {day:0, time:'10h30', name:'Bricolage automne', desc:'Fresque murale'},
+    {day:1, time:'9h30', name:'Éveil musical', desc:'Percussions'},
+    {day:1, time:'15h00', name:'Lecture contée', desc:'Histoires de la forêt'},
+    {day:2, time:'10h00', name:'Cuisine péd.', desc:'Sablés cannelle'},
+    {day:3, time:'9h15', name:'Sortie bibliothèque', desc:'Bus municipal'},
+    {day:3, time:'11h00', name:'Yoga ludique', desc:'Postures animaux'},
+    {day:4, time:'10h30', name:'Jeux d\u2019eau', desc:'Transvasement sensoriel'}
+  ],
+  'S41': [
+    {day:0, time:'9h00', name:'Éveil sensoriel', desc:'Bacs de sable fin'},
+    {day:0, time:'10h30', name:'Peinture libre', desc:'Aquarelle'},
+    {day:1, time:'9h30', name:'Gym douce', desc:'Parcours motricité'},
+    {day:2, time:'10h00', name:'Poterie enfants', desc:'Argile naturelle'},
+    {day:2, time:'14h30', name:'Chant choral', desc:'Chansons du monde'},
+    {day:3, time:'9h15', name:'Jardinage', desc:'Plantation de bulbes'},
+    {day:4, time:'9h30', name:'Jeux de société', desc:'Coopératifs 3-4 ans'},
+    {day:4, time:'15h00', name:'Contes du monde', desc:'Bibliothèque imaginaire'},
+    {day:4, time:'16h00', name:'Relaxation', desc:'Sophrologie enfants'}
+  ]
+};
+
+function applyWeekCopy(weekId, weekLabel) {
+  closeCopyModal();
+  var acts = weekActivities[weekId] || weekActivities['S41'];
+  // Re-populate day columns in edu-programme
+  var cols = document.querySelectorAll('#edu-programme .day-col');
+  cols.forEach(function(col, colIdx) {
+    // Remove existing act-slots (keep header)
+    col.querySelectorAll('.act-slot, .drop-zone, .add-slot').forEach(function(el){ el.remove(); });
+    // Add matching activities
+    acts.filter(function(a){ return a.day === colIdx; }).forEach(function(a) {
+      var slot = document.createElement('div');
+      slot.className = 'act-slot';
+      slot.setAttribute('draggable','true');
+      slot.innerHTML = '<div class="at-time">' + a.time + '</div>' +
+                       '<span class="drag-handle">⠿</span>' +
+                       '<div class="at-name">' + a.name + '</div>' +
+                       '<div class="at-desc">' + a.desc + '</div>';
+      slot.addEventListener('dragstart', dragStart);
+      slot.addEventListener('dragend', dragEnd);
+      col.appendChild(slot);
+    });
+    // Re-add drop zone and add button
+    var zone = document.createElement('div');
+    zone.className = 'drop-zone';
+    zone.textContent = '＋ Déposer une activité ici';
+    zone.addEventListener('dragover', dragOver);
+    zone.addEventListener('drop', dropSlot);
+    col.appendChild(zone);
+    var addBtn = document.createElement('button');
+    addBtn.className = 'add-slot';
+    addBtn.textContent = '+';
+    col.appendChild(addBtn);
+  });
+  // Update week nav label
+  var lbl = document.getElementById('week-label');
+  if(lbl) lbl.textContent = 'Copié — Sem. ' + weekLabel;
+  // Show success toast
+  var toast = document.getElementById('copy-toast');
+  toast.classList.add('show');
+  setTimeout(function(){ toast.classList.remove('show'); }, 3200);
+}
+
+// ── Admin tableau blanc ───────────────────
+var typeTagMap = {
+  menu:      {cls:'wb-menu',    label:'Menu',     color:'#1a7a6d', dotColor:'#1a7a6d'},
+  activite:  {cls:'wb-activite',label:'Activité', color:'#7C3AED', dotColor:'#7C3AED'},
+  rappel:    {cls:'wb-rappel',  label:'Rappel',   color:'#f0a000', dotColor:'#f0a000'},
+  annonce:   {cls:'wb-annonce', label:'Annonce',  color:'#C85A00', dotColor:'#C85A00'},
+  evenement: {cls:'wb-activite',label:'Événement',color:'#7C3AED', dotColor:'#7C3AED'}
+};
+var currentType = 'menu';
+
+function selectType(el, type) {
+  el.closest('.tbl-type-pills').querySelectorAll('.tbl-pill').forEach(function(p){ p.classList.remove('active-pill'); });
+  el.classList.add('active-pill');
+  currentType = type;
+  updatePreview();
+}
+
+function updatePreview() {
+  var info = typeTagMap[currentType] || typeTagMap['menu'];
+  var tag = document.getElementById('prev-tag');
+  var txt = document.getElementById('prev-text');
+  var dot = document.getElementById('prev-dot');
+  if(tag){ tag.className = 'tbl-prev-tag ' + info.cls; tag.textContent = info.label; }
+  if(dot){ dot.style.background = info.dotColor; }
+  var content = document.getElementById('tbl-content');
+  if(txt && content) txt.textContent = content.value || '(Votre message apparaîtra ici)';
+}
+
+function publishTableau() {
+  var btn = event.currentTarget || document.querySelector('[onclick="publishTableau()"]');
+  if(btn){ btn.textContent = '✔ Publié !'; btn.style.background = '#1a7a52'; }
+  setTimeout(function(){
+    if(btn){ btn.textContent = '✔ Publier sur l\u2019espace parent'; btn.style.background = ''; }
+  }, 2500);
+}
+
+
+// ── Mood selection ────────────────────────
+function selectMood(el) {
+  el.closest('.mood-grid').querySelectorAll('.mood-opt').forEach(function(o){ o.classList.remove('sel-m'); });
+  el.classList.add('sel-m');
+}
+
+// ── Consigne selection (mascot states) ───
+var consigneColors = ['#d0f5e0', '#FFF3D0', '#ffe0d0'];
+var consigneBorders = ['#2A9D8F', '#f0a000', '#e44'];
+function selectConsigne(el) {
+  var opts = el.closest('.consignes').querySelectorAll('.c-opt');
+  opts.forEach(function(o, i) {
+    o.classList.remove('sel-g');
+    o.style.borderColor = '';
+    o.style.background = '';
+    var bear = o.querySelector('div');
+    if (bear) bear.style.background = consigneColors[i];
+  });
+  var idx = Array.from(opts).indexOf(el);
+  el.classList.add('sel-g');
+  el.style.borderColor = consigneBorders[idx];
+  el.style.background = consigneColors[idx] + '55';
+}
+
+// ── Week navigation ───────────────────────
+var weeks = [
+  {label:'Semaine 10 — 14 Oct.', range:'Sem. 42 / 2024'},
+  {label:'Semaine 14 — 18 Oct.', range:'Sem. 42 / 2024'},
+  {label:'Semaine 21 — 25 Oct.', range:'Sem. 43 / 2024'},
+  {label:'Semaine 28 Oct. — 1 Nov.', range:'Sem. 44 / 2024'},
+];
+var weekIdx = 1;
+function changeWeek(dir) {
+  weekIdx = Math.max(0, Math.min(weeks.length-1, weekIdx+dir));
+  var w = weeks[weekIdx];
+  var lbl = document.getElementById('week-label');
+  var rng = document.getElementById('week-range');
+  if(lbl) lbl.textContent = w.label;
+  if(rng) rng.textContent = w.range;
+}
+function toggleHist() {
+  var p = document.getElementById('hist-panel');
+  if(p) p.classList.toggle('visible');
+}
+function loadWeek(code) {
+  var map = {S41:'Semaine 7 — 11 Oct.',S40:'Semaine 30 Sept. — 4 Oct.',S39:'Semaine 23 — 27 Sept.',S38:'Semaine 16 — 20 Sept.'};
+  var lbl = document.getElementById('week-label');
+  if(lbl && map[code]) lbl.textContent = map[code];
+  var p = document.getElementById('hist-panel');
+  if(p) p.classList.remove('visible');
+}
+
+// ── Drag & drop (planning) ────────────────
+var draggedSlot = null;
+function dragStart(e) {
+  draggedSlot = e.currentTarget;
+  draggedSlot.classList.add('dragging-slot');
+  e.dataTransfer.setData('text/plain', draggedSlot.innerHTML);
+}
+function dragEnd(e) {
+  if(draggedSlot) draggedSlot.classList.remove('dragging-slot');
+  document.querySelectorAll('.drop-zone').forEach(function(z){ z.classList.remove('drag-over'); });
+  draggedSlot = null;
+}
+function dragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+function dropSlot(e) {
+  e.preventDefault();
+  var zone = e.currentTarget;
+  if(draggedSlot && zone) {
+    var newSlot = draggedSlot.cloneNode(true);
+    newSlot.classList.remove('dragging-slot');
+    newSlot.setAttribute('draggable','true');
+    newSlot.addEventListener('dragstart',function(ev){ dragStart(ev); });
+    newSlot.addEventListener('dragend',function(ev){ dragEnd(ev); });
+    zone.parentNode.insertBefore(newSlot, zone);
+    draggedSlot.remove();
+  }
+  zone.classList.remove('drag-over');
+}
+
+// ── Room tabs (parent + admin) ─────────────
+document.addEventListener('click', function(e) {
+  if(e.target.classList.contains('room-tab')) {
+    e.target.closest('.room-tabs').querySelectorAll('.room-tab').forEach(function(t){ t.classList.remove('active'); });
+    e.target.classList.add('active');
+  }
+  if(e.target.classList.contains('prt')) {
+    e.target.closest('.prog-room-tabs').querySelectorAll('.prt').forEach(function(t){ t.classList.remove('active'); });
+    e.target.classList.add('active');
+  }
+});
+
+</script>
+</body>
+</html>

@@ -1,9 +1,19 @@
-import { GestureResponderEvent, StyleProp, Text, TouchableOpacity, ViewStyle } from "react-native";
+import React from 'react';
+import { StyleProp, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
 
-const ButtonCustom = ({ title, style, onPress } : {title: string, style: StyleProp<ViewStyle>, onPress? : ((event: GestureResponderEvent) => void) | undefined}) => (
-    <TouchableOpacity style={style} onPress={onPress}>
-        <Text>{title}</Text>
-    </TouchableOpacity>
-);
+type ButtonCustomProps = {
+	title?: string;
+	onPress?: () => void;
+	style?: StyleProp<ViewStyle>;
+	textStyle?: StyleProp<TextStyle>;
+	disabled?: boolean;
+	children?: React.ReactNode;
+};
 
-export default ButtonCustom;
+export default function ButtonCustom({ title, onPress, style, textStyle, disabled, children }: ButtonCustomProps) {
+	return (
+		<TouchableOpacity activeOpacity={0.85} onPress={onPress} style={style} disabled={disabled}>
+			{children ?? <Text style={textStyle}>{title}</Text>}
+		</TouchableOpacity>
+	);
+}

@@ -15,7 +15,7 @@ export default function Login({ route, navigation }: { route: any, navigation: a
     const { control, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(loginSchema) });
 
     const onSubmit = async (data: LoginSchemaType) => {
-        await ApiService.Login(data).then(res => {
+        await ApiService.Login(data, route?.params?.role).then(res => {
             if(res.success === true) {
                 console.log("Login successful:", res.data);
                 // Store the token in local storage or cookies if needed

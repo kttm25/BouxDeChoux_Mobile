@@ -11,16 +11,98 @@ import AssignEducatorDTO from "../models/assigneducator.dto";
 import UpdateEducatorHoursDTO from "../models/updateeducatorhours.dto";
 import CreateDailyReportDTO from "../models/createDailyReport.dto";
 import UpdateDailyReportDTO from "../models/updateDailyReport.dto";
+import AuthSession from "./AuthSession";
 
 export default class ApiService {
-    static async Login(loginDto: LoginSchemaType) {
-        const response = await HttpService.postData("Auth/Login", "", loginDto)
+    private static webSessionKey = "bouxdechoux_web_session";
+
+    private static isWebRuntime() {
+        return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
+    }
+
+    private static getWebSession(): { role: string } | null {
+        if (!this.isWebRuntime()) {
+            return null;
+        }
+
+        const rawSession = window.localStorage.getItem(this.webSessionKey);
+        if (!rawSession) {
+            return null;
+        }
+
+        try {
+            return JSON.parse(rawSession) as { role: string };
+        } catch {
+            return null;
+        }
+    }
+
+    private static setWebSession(role: string) {
+        if (!this.isWebRuntime()) {
+            return;
+        }
+
+        window.localStorage.setItem(this.webSessionKey, JSON.stringify({ role }));
+    }
+
+    private static clearWebSession() {
+        if (!this.isWebRuntime()) {
+            return;
+        }
+
+        window.localStorage.removeItem(this.webSessionKey);
+    }
+
+    private static async tryGetData(candidates: Array<{ path: string; id?: string | number }>) {
+        let lastError: any = null;
+
+        for (const candidate of candidates) {
+            try {
+                const res = await HttpService.getData(candidate.path, candidate.id ? String(candidate.id) : "", {});
+                if (res?.success === true) {
+                    return res;
+                }
+            } catch (error) {
+                lastError = error;
+            }
+        }
+
+        throw lastError ?? new Error("No matching endpoint succeeded");
+    }
+
+    static async Login(loginDto: LoginSchemaType, role: string) {
+        const normalizedRole = String(role ?? "").toLowerCase();
+
+        const loginPathByRole: Record<string, string> = {
+            responsable: "Auth/Login/Manager",
+            parent: "Auth/Login/Parent",
+            educatrice: "Auth/Login/Educator",
+        };
+
+        const loginPath = loginPathByRole[normalizedRole];
+
+        if (!loginPath) {
+            throw new Error(`Unsupported login role: ${role}`);
+        }
+
+        // Ensure login requests are sent without a stale bearer token.
+        AuthSession.clearAuthSession();
+
+        const response = await HttpService.postData(loginPath, "", loginDto)
             .then((res) => {
-                if (res.success === true) {
+                if (res?.success === true) {
+                    const responseToken = res?.data?.token ?? "";
+                    if (responseToken) {
+                        AuthSession.saveAuthSession({
+                            role: normalizedRole,
+                            email: loginDto.email,
+                            token: responseToken,
+                        });
+                    }
                     return res;
                 } else {
-                    console.log("Login failed:", res.message);
-                    throw new Error(res.message);
+                    console.log("Login failed:", res?.message);
+                    throw new Error(res?.message ?? "Login failed");
                 }
             })
             .catch((error) => {
@@ -31,6 +113,21 @@ export default class ApiService {
     }
     
     static async GetUser() {
+        if (this.isWebRuntime()) {
+            const session = AuthSession.loadAuthSession();
+            if (session) {
+                return {
+                    success: true,
+                    data: {
+                        role: session.role,
+                        token: session.token,
+                    },
+                };
+            }
+
+            throw new Error("No authenticated web session");
+        }
+
         const response = await HttpService.getData("User", "", {})
             .then((res) => {
                 if (res.success === true) {
@@ -116,6 +213,11 @@ export default class ApiService {
     }
     
     static async Logout() {
+        if (this.isWebRuntime()) {
+            AuthSession.clearAuthSession();
+            return { success: true };
+        }
+
         const response = await HttpService.getData("Auth/Logout", "", {})
             .then((res) => {
                 if (res.success === true) {
@@ -317,6 +419,46 @@ export default class ApiService {
                 console.log("Get rooms error:", error.message);
                 throw error;
             });
+        return response;
+    }
+
+    static async GetMyEducatorRooms() {
+        const response = await ApiService.tryGetData([
+            { path: "Personal/Rooms" },
+            { path: "Personal/GetRooms" },
+            { path: "Room/MyRooms" },
+            { path: "Room/Assigned" },
+        ]).catch((error) => {
+            console.log("Get educator rooms error:", error?.message);
+            throw error;
+        });
+
+        return response;
+    }
+
+    static async GetChildrenByRoom(roomId: string | number) {
+        const response = await ApiService.tryGetData([
+            { path: `Room/${String(roomId)}/Children` },
+            { path: "Child/ByRoom", id: roomId },
+            { path: "Child/Room", id: roomId },
+        ]).catch((error) => {
+            console.log("Get children by room error:", error?.message);
+            throw error;
+        });
+
+        return response;
+    }
+
+    static async GetMyParentChildren() {
+        const response = await ApiService.tryGetData([
+            { path: "Parent/Children" },
+            { path: "Parent/GetChildren" },
+            { path: "Parent/MyChildren" },
+        ]).catch((error) => {
+            console.log("Get parent children error:", error?.message);
+            throw error;
+        });
+
         return response;
     }
 

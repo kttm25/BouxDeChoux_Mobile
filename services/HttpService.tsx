@@ -1,11 +1,11 @@
 import axios from "axios";
 import { AppText } from "../constants/Constants";
 import { NativeModules } from "react-native";
+import AuthSession from "./AuthSession";
 
 export default class HttpService {
-    private static envApiUrl: string | undefined =
-        (globalThis as any)?.process?.env?.API_URL 
-    private static defaultApiUrl: string = "http://192.168.2.176:5018/api";
+    private static envApiUrl: string | undefined = process.env.EXPO_PUBLIC_API_URL;
+    private static defaultApiUrl: string = "http://192.168.2.200:5018/api";
     static api_url: string = HttpService.normalizeApiUrl(
         HttpService.envApiUrl ?? HttpService.inferDevApiUrl() ?? HttpService.defaultApiUrl
     );
@@ -30,11 +30,13 @@ export default class HttpService {
         return trimmedUrl.toLowerCase().endsWith("/api") ? trimmedUrl : `${trimmedUrl}/api`;
     }
     public static async getData(path: string, id:string ="", bodyParams: object) {
+        const session = AuthSession.loadAuthSession();
         const response = await fetch(`${this.api_url}/${path}/${id}`, {
             method: "GET",
             headers: {
                 //Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
+                ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}),
             },
             credentials: "include",
         });
@@ -47,11 +49,13 @@ export default class HttpService {
     }
 
     static async postData(path: string, id:string ="", bodyParams: object) {
+        const session = AuthSession.loadAuthSession();
         const response = await fetch(`${this.api_url}/${path}/${id}`, {
             method: "POST",
             headers: {
                 //Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
+                ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}),
             },
             credentials: "include",
             body: JSON.stringify(bodyParams),
@@ -80,11 +84,13 @@ export default class HttpService {
     }
 
     static async putData(path: string, id:string ="", bodyParams: object) {
+        const session = AuthSession.loadAuthSession();
         const response = await fetch(`${this.api_url}/${path}/${id}`, {
             method: "PUT",
             headers: {
                 //Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
+                ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}),
             },
             credentials: "include",
             body: JSON.stringify(bodyParams),
@@ -113,10 +119,12 @@ export default class HttpService {
     }
 
     static async deleteData(path: string, id:string ="", bodyParams: object = {}) {
+        const session = AuthSession.loadAuthSession();
         const response = await fetch(`${this.api_url}/${path}/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}),
             },
             credentials: "include",
             body: JSON.stringify(bodyParams),
